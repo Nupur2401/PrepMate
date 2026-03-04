@@ -32,6 +32,27 @@
   <button onclick="goToStudyMode()">Study</button>
   <button onclick="goToTestMode()">Test</button>
 </section>
+<!-- Screen 3: Study Mode -->
+<section id="study-mode" style="display:none;">
+  <h2>Study Mode</h2>
+
+  <!-- Notes Tab -->
+  <div id="notes-tab">
+    <h3>Notes</h3>
+    <select id="subsectionDropdown">
+      <option value="">-- Choose a Subsection --</option>
+    </select>
+    <br><br>
+    <button onclick="loadNotes()">Load Notes</button>
+    <button onclick="moreExplanation()">More Explanation</button>
+    <button onclick="watchVideo()">Watch Video</button>
+
+    <!-- Notes content will appear here -->
+    <div id="notesContent" style="margin-top:20px; text-align:left;"></div>
+  </div>
+</section>
+  
+  
   <!-- Footer -->
   <footer>
     <p>PrepMate v1.0 (MVP)</p>
@@ -40,4 +61,5 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
