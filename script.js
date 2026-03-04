@@ -29,6 +29,23 @@ function goToStudyMode() {
   if (!chapter) {
     alert("Please select a chapter first!");
     return;
+    // Inside goToStudyMode()
+const exerciseDropdown = document.getElementById("exerciseDropdown");
+exerciseDropdown.innerHTML = '<option value="">-- Choose an Exercise --</option>';
+
+let exercises = [];
+if (chapter === "Real Numbers") {
+  exercises = ["Exercise 1.1", "Exercise 1.2"];
+} else if (chapter === "Chemical Reactions") {
+  exercises = ["Exercise 1.1", "Exercise 1.2"];
+}
+
+exercises.forEach(exercise => {
+  const option = document.createElement("option");
+  option.value = exercise;
+  option.textContent = exercise;
+  exerciseDropdown.appendChild(option);
+});
   }
 
   // Hide Chapter Selection, show Study Mode
@@ -134,5 +151,6 @@ function goToTestMode() {
   }
   alert("Test Mode for " + chapter + " coming soon!");
 }
+
 
 
