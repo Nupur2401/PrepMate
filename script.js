@@ -46,7 +46,7 @@ function goToStudyMode() {
     option.textContent = exercise;
     exerciseDropdown.appendChild(option);
   });
-    }
+}
 
     // Hide Chapter Selection, show Study Mode
     document.getElementById("chapter-selection").style.display = "none";
@@ -151,6 +151,7 @@ function goToTestMode() {
   }
   alert("Test Mode for " + chapter + " coming soon!");
 }
+
 
 
 
