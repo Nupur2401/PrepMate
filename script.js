@@ -29,7 +29,8 @@ function goToStudyMode() {
   if (!chapter) {
     alert("Please select a chapter first!");
     return;
-    // Inside goToStudyMode()
+  }
+  // Inside goToStudyMode()
   const exerciseDropdown = document.getElementById("exerciseDropdown");
   exerciseDropdown.innerHTML = '<option value="">-- Choose an Exercise --</option>';
 
@@ -151,6 +152,7 @@ function goToTestMode() {
   }
   alert("Test Mode for " + chapter + " coming soon!");
 }
+
 
 
 
