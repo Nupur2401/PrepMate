@@ -84,6 +84,48 @@ function watchVideo() {
     "<p><a href='#'>Suggested video for " + subsection + " (placeholder)</a></p>";
 }
 
+function loadExerciseQuestions() {
+  const exercise = document.getElementById("exerciseDropdown").value;
+  if (!exercise) {
+    alert("Please select an exercise first!");
+    return;
+  }
+
+  // Placeholder questions (later replaced by ChatGPT API)
+  let questions = [];
+  if (exercise === "Exercise 1.1") {
+    questions = [
+      "Q1: Find the HCF of 12 and 18.",
+      "Q2: Use Euclid’s Division Lemma to show that 9 divides 36."
+    ];
+  } else if (exercise === "Exercise 1.2") {
+    questions = [
+      "Q1: Find the LCM of 15 and 20.",
+      "Q2: Prove that √2 is irrational."
+    ];
+  }
+
+  const contentDiv = document.getElementById("exerciseContent");
+  contentDiv.innerHTML = "";
+  questions.forEach((q, index) => {
+    contentDiv.innerHTML += `
+      <p>${q}</p>
+      <button onclick="showAnswer(${index})">Show Answer</button>
+      <button onclick="viewSolution(${index})">View Full Solution</button>
+      <div id="answer-${index}" style="margin-left:20px; color:blue;"></div>
+    `;
+  });
+}
+
+function showAnswer(index) {
+  document.getElementById("answer-" + index).innerHTML = "Answer: (placeholder)";
+}
+
+function viewSolution(index) {
+  document.getElementById("answer-" + index).innerHTML = "Step-by-step solution (placeholder)";
+}
+
+
 function goToTestMode() {
   const chapter = document.getElementById("chapterDropdown").value;
   if (!chapter) {
@@ -92,4 +134,5 @@ function goToTestMode() {
   }
   alert("Test Mode for " + chapter + " coming soon!");
 }
+
 
