@@ -15,13 +15,23 @@
     </nav>
   </header>
 
-  <!-- Subject Selection -->
-  <main>
-    <h2>Select Subject</h2>
-    <button onclick="selectSubject('Maths')">Maths</button>
-    <button onclick="selectSubject('Science')">Science</button>
-  </main>
+ <!-- Screen 1: Subject Selection -->
+<main>
+  <h2>Select Subject</h2>
+  <button onclick="selectSubject('Maths')">Maths</button>
+  <button onclick="selectSubject('Science')">Science</button>
+</main>
 
+<!-- Screen 2: Chapter Selection -->
+<section id="chapter-selection" style="display:none;">
+  <h2>Select Chapter</h2>
+  <select id="chapterDropdown">
+    <option value="">-- Choose a Chapter --</option>
+  </select>
+  <br><br>
+  <button onclick="goToStudyMode()">Study</button>
+  <button onclick="goToTestMode()">Test</button>
+</section>
   <!-- Footer -->
   <footer>
     <p>PrepMate v1.0 (MVP)</p>
@@ -30,3 +40,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
