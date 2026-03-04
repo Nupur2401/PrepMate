@@ -30,7 +30,58 @@ function goToStudyMode() {
     alert("Please select a chapter first!");
     return;
   }
-  alert("Study Mode for " + chapter + " coming soon!");
+
+  // Hide Chapter Selection, show Study Mode
+  document.getElementById("chapter-selection").style.display = "none";
+  document.getElementById("study-mode").style.display = "block";
+
+  // Populate subsections (static for now, later via ChatGPT API)
+  const subsectionDropdown = document.getElementById("subsectionDropdown");
+  subsectionDropdown.innerHTML = '<option value="">-- Choose a Subsection --</option>';
+
+  let subsections = [];
+  if (chapter === "Real Numbers") {
+    subsections = ["Introduction", "Euclid’s Division Lemma", "Fundamental Theorem of Arithmetic", "Applications"];
+  } else if (chapter === "Chemical Reactions") {
+    subsections = ["Introduction", "Types of Reactions", "Balancing Equations", "Applications"];
+  }
+
+  subsections.forEach(subsection => {
+    const option = document.createElement("option");
+    option.value = subsection;
+    option.textContent = subsection;
+    subsectionDropdown.appendChild(option);
+  });
+}
+
+function loadNotes() {
+  const subsection = document.getElementById("subsectionDropdown").value;
+  if (!subsection) {
+    alert("Please select a subsection first!");
+    return;
+  }
+  document.getElementById("notesContent").innerHTML =
+    "<h4>" + subsection + "</h4><p>Notes for " + subsection + " will appear here.</p>";
+}
+
+function moreExplanation() {
+  const subsection = document.getElementById("subsectionDropdown").value;
+  if (!subsection) {
+    alert("Please select a subsection first!");
+    return;
+  }
+  document.getElementById("notesContent").innerHTML +=
+    "<p><em>More explanation for " + subsection + " coming soon...</em></p>";
+}
+
+function watchVideo() {
+  const subsection = document.getElementById("subsectionDropdown").value;
+  if (!subsection) {
+    alert("Please select a subsection first!");
+    return;
+  }
+  document.getElementById("notesContent").innerHTML +=
+    "<p><a href='#'>Suggested video for " + subsection + " (placeholder)</a></p>";
 }
 
 function goToTestMode() {
@@ -41,3 +92,4 @@ function goToTestMode() {
   }
   alert("Test Mode for " + chapter + " coming soon!");
 }
+
