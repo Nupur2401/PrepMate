@@ -30,46 +30,46 @@ function goToStudyMode() {
     alert("Please select a chapter first!");
     return;
     // Inside goToStudyMode()
-const exerciseDropdown = document.getElementById("exerciseDropdown");
-exerciseDropdown.innerHTML = '<option value="">-- Choose an Exercise --</option>';
+  const exerciseDropdown = document.getElementById("exerciseDropdown");
+  exerciseDropdown.innerHTML = '<option value="">-- Choose an Exercise --</option>';
 
-let exercises = [];
-if (chapter === "Real Numbers") {
-  exercises = ["Exercise 1.1", "Exercise 1.2"];
-} else if (chapter === "Chemical Reactions") {
-  exercises = ["Exercise 1.1", "Exercise 1.2"];
-}
-
-exercises.forEach(exercise => {
-  const option = document.createElement("option");
-  option.value = exercise;
-  option.textContent = exercise;
-  exerciseDropdown.appendChild(option);
-});
-  }
-
-  // Hide Chapter Selection, show Study Mode
-  document.getElementById("chapter-selection").style.display = "none";
-  document.getElementById("study-mode").style.display = "block";
-
-  // Populate subsections (static for now, later via ChatGPT API)
-  const subsectionDropdown = document.getElementById("subsectionDropdown");
-  subsectionDropdown.innerHTML = '<option value="">-- Choose a Subsection --</option>';
-
-  let subsections = [];
+  let exercises = [];
   if (chapter === "Real Numbers") {
-    subsections = ["Introduction", "Euclid’s Division Lemma", "Fundamental Theorem of Arithmetic", "Applications"];
+    exercises = ["Exercise 1.1", "Exercise 1.2"];
   } else if (chapter === "Chemical Reactions") {
-    subsections = ["Introduction", "Types of Reactions", "Balancing Equations", "Applications"];
-  }
+    exercises = ["Exercise 1.1", "Exercise 1.2"];
+  }  
 
-  subsections.forEach(subsection => {
+  exercises.forEach(exercise => {
     const option = document.createElement("option");
-    option.value = subsection;
-    option.textContent = subsection;
-    subsectionDropdown.appendChild(option);
+    option.value = exercise;
+    option.textContent = exercise;
+    exerciseDropdown.appendChild(option);
   });
-}
+    }
+
+    // Hide Chapter Selection, show Study Mode
+    document.getElementById("chapter-selection").style.display = "none";
+    document.getElementById("study-mode").style.display = "block";
+
+    // Populate subsections (static for now, later via ChatGPT API)
+    const subsectionDropdown = document.getElementById("subsectionDropdown");
+    subsectionDropdown.innerHTML = '<option value="">-- Choose a Subsection --</option>';
+
+    let subsections = [];
+    if (chapter === "Real Numbers") {
+      subsections = ["Introduction", "Euclid’s Division Lemma", "Fundamental Theorem of Arithmetic", "Applications"];
+    } else if (chapter === "Chemical Reactions") {
+      subsections = ["Introduction", "Types of Reactions", "Balancing Equations", "Applications"];
+    }  
+
+    subsections.forEach(subsection => {
+      const option = document.createElement("option");
+      option.value = subsection;
+      option.textContent = subsection;
+      subsectionDropdown.appendChild(option);
+    });
+  }
 
 function loadNotes() {
   const subsection = document.getElementById("subsectionDropdown").value;
@@ -151,6 +151,7 @@ function goToTestMode() {
   }
   alert("Test Mode for " + chapter + " coming soon!");
 }
+
 
 
 
