@@ -37,3 +37,9 @@ select {
   font-size: 16px;
   margin: 10px;
 }
+#notesContent {
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
