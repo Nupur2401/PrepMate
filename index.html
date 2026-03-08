@@ -42,6 +42,7 @@
     <button class="tab-button active" onclick="showStudyTab('notes-tab')">Notes</button>
     <button class="tab-button" onclick="showStudyTab('exercise-tab')">Exercise</button>
     <button class="tab-button" onclick="showStudyTab('revision-tab')">Revision</button>
+    <button class="tab-button" onclick="showStudyTab('unit-test-tab')">Unit Test</button>
   </div>
 
   <!-- Notes Tab -->
@@ -73,6 +74,19 @@
     <h3>Revision</h3>
     <p>Quick revision notes will appear here.</p>
   </div>
+
+  <!-- Unit Test Tab -->
+  <div id="unit-test-tab" class="study-tab" style="display:none;">
+    <h3>Unit Test</h3>
+    <select id="unitTestDropdown">
+      <option value="">-- Choose a Subsection --</option>
+    </select>
+    <br><br>
+    <button onclick="loadUnitTest()">Start Unit Test</button>
+    <div id="unitTestContent" class="content-box"></div>
+    <button onclick="submitUnitTest()">Submit Unit Test</button>
+    <div id="unitTestResult" style="margin-top:20px; font-weight:bold;"></div>
+  </div>
 </section>
 
   <!-- Screen 4: Test Mode -->
@@ -92,5 +106,6 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
