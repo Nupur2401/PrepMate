@@ -22,82 +22,6 @@
     <button onclick="selectSubject('Science')">Science</button>
   </main>
 
-  <!-- Screen 2: Chapter Selection -->
-  <section id="chapter-selection" style="display:none;">
-    <h2>Select Chapter</h2>
-    <select id="chapterDropdown">
-      <option value="">-- Choose a Chapter --</option>
-    </select>
-    <br><br>
-    <button onclick="goToStudyMode()">Study</button>
-    <button onclick="goToTestMode()">Test</button>
-  </section>
-
-  <!-- Screen 3: Study Mode -->
-<section id="study-mode" style="display:none;">
-  <h2>Study Mode</h2>
-
-  <!-- Tab Buttons -->
-  <div class="tab-bar">
-    <button class="tab-button active" onclick="showStudyTab('notes-tab')">Notes</button>
-    <button class="tab-button" onclick="showStudyTab('exercise-tab')">Exercise</button>
-    <button class="tab-button" onclick="showStudyTab('revision-tab')">Revision</button>
-    <button class="tab-button" onclick="showStudyTab('unit-test-tab')">Unit Test</button>
-  </div>
-
-  <!-- Notes Tab -->
-  <div id="notes-tab" class="study-tab">
-    <h3>Notes</h3>
-    <select id="subsectionDropdown">
-      <option value="">-- Choose a Subsection --</option>
-    </select>
-    <br><br>
-    <button onclick="loadNotes()">Load Notes</button>
-    <button onclick="moreExplanation()">More Explanation</button>
-    <button onclick="watchVideo()">Watch Video</button>
-    <div id="notesContent" class="content-box"></div>
-  </div>
-
-  <!-- Exercise Tab -->
-  <div id="exercise-tab" class="study-tab" style="display:none;">
-    <h3>Exercise</h3>
-    <select id="exerciseDropdown">
-      <option value="">-- Choose an Exercise --</option>
-    </select>
-    <br><br>
-    <button onclick="loadExerciseQuestions()">Load Questions</button>
-    <div id="exerciseContent" class="content-box"></div>
-  </div>
-
-  <!-- Revision Tab -->
-  <div id="revision-tab" class="study-tab" style="display:none;">
-    <h3>Revision</h3>
-    <p>Quick revision notes will appear here.</p>
-  </div>
-
-  <!-- Unit Test Tab -->
-  <div id="unit-test-tab" class="study-tab" style="display:none;">
-    <h3>Unit Test</h3>
-    <select id="unitTestDropdown">
-      <option value="">-- Choose a Subsection --</option>
-    </select>
-    <br><br>
-    <button onclick="loadUnitTest()">Start Unit Test</button>
-    <div id="unitTestContent" class="content-box"></div>
-    <button onclick="submitUnitTest()">Submit Unit Test</button>
-    <div id="unitTestResult" style="margin-top:20px; font-weight:bold;"></div>
-  </div>
-</section>
-
-  <!-- Screen 4: Test Mode -->
-<section id="test-mode" style="display:none;">
-  <h2>Test Mode</h2>
-  <div id="testContent" class="content-box"></div>
-  <button onclick="submitTest()">Submit Test</button>
-  <div id="testResult" style="margin-top:20px; font-weight:bold;"></div>
-</section>
-
-  
   <!-- Footer -->
   <footer>
     <p>PrepMate v1.0 (MVP)</p>
@@ -106,6 +30,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
-
-
