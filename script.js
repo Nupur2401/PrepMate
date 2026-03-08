@@ -77,7 +77,8 @@ function showStudyTab(tabId) {
   const buttons = document.querySelectorAll(".tab-button");
   buttons.forEach(btn => btn.classList.remove("active"));
 
-  const activeBtn = Array.from(buttons).find(btn => tabId.includes(btn.textContent.toLowerCase()));
+  // Match button by data attribute instead of text
+  const activeBtn = Array.from(buttons).find(btn => btn.getAttribute("onclick").includes(tabId));
   if (activeBtn) activeBtn.classList.add("active");
 }
 
@@ -103,4 +104,5 @@ function watchVideo() {
   const subsection = document.getElementById("subsectionDropdown").value;
   if (!subsection) return;
   document.getElementById("notesContent").innerHTML +=
-    `<p><a href="#">Suggested video for ${subsection} (placeholder)</
+    `<p><a href="#">Suggested video for ${subsection} (placeholder)</a></p>`;
+}
