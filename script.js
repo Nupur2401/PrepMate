@@ -30,15 +30,6 @@ function goToStudyMode() {
     alert("Please select a chapter first!");
     return;
   }
-  alert("Study Mode for " + chapter + " coming soon!");
-}
-
-function goToStudyMode() {
-  const chapter = document.getElementById("chapterDropdown").value;
-  if (!chapter) {
-    alert("Please select a chapter first!");
-    return;
-  }
 
   // Hide Chapter Selection, show Study Mode
   document.getElementById("chapter-selection").style.display = "none";
@@ -146,4 +137,5 @@ function showAnswer(index) {
 function viewSolution(index) {
   document.getElementById("answer-" + index).innerHTML = "Step-by-step solution (placeholder)";
 }
+
 
