@@ -30,32 +30,7 @@ function goToStudyMode() {
     alert("Please select a chapter first!");
     return;
   }
-
-  // Hide Chapter Selection, show Study Mode
-  document.getElementById("chapter-selection").style.display = "none";
-  document.getElementById("study-mode").style.display = "block";
-
-  // Populate exercises
-  const exerciseDropdown = document.getElementById("exerciseDropdown");
-  exerciseDropdown.innerHTML = '<option value="">-- Choose an Exercise --</option>';
-  let exercises = ["Exercise 1.1", "Exercise 1.2"];
-  exercises.forEach(exercise => {
-    const option = document.createElement("option");
-    option.value = exercise;
-    option.textContent = exercise;
-    exerciseDropdown.appendChild(option);
-  });
-
-  // Populate subsections
-  const subsectionDropdown = document.getElementById("subsectionDropdown");
-  subsectionDropdown.innerHTML = '<option value="">-- Choose a Subsection --</option>';
-  let subsections = ["Introduction", "Key Concepts", "Examples"];
-  subsections.forEach(subsection => {
-    const option = document.createElement("option");
-    option.value = subsection;
-    option.textContent = subsection;
-    subsectionDropdown.appendChild(option);
-  });
+  alert("Study Mode for " + chapter + " coming soon!");
 }
 
 function goToTestMode() {
@@ -65,44 +40,4 @@ function goToTestMode() {
     return;
   }
   alert("Test Mode for " + chapter + " coming soon!");
-}
-
-// Tab switching
-function showStudyTab(tabId) {
-  const tabs = document.querySelectorAll(".study-tab");
-  tabs.forEach(tab => tab.style.display = "none");
-
-  document.getElementById(tabId).style.display = "block";
-
-  const buttons = document.querySelectorAll(".tab-button");
-  buttons.forEach(btn => btn.classList.remove("active"));
-
-  // Match button by data attribute instead of text
-  const activeBtn = Array.from(buttons).find(btn => btn.getAttribute("onclick").includes(tabId));
-  if (activeBtn) activeBtn.classList.add("active");
-}
-
-// Notes functions
-function loadNotes() {
-  const subsection = document.getElementById("subsectionDropdown").value;
-  if (!subsection) {
-    alert("Please select a subsection first!");
-    return;
-  }
-  document.getElementById("notesContent").innerHTML =
-    `<h4>${subsection}</h4><p>Notes for ${subsection} will appear here.</p>`;
-}
-
-function moreExplanation() {
-  const subsection = document.getElementById("subsectionDropdown").value;
-  if (!subsection) return;
-  document.getElementById("notesContent").innerHTML +=
-    `<p><em>More explanation for ${subsection} coming soon...</em></p>`;
-}
-
-function watchVideo() {
-  const subsection = document.getElementById("subsectionDropdown").value;
-  if (!subsection) return;
-  document.getElementById("notesContent").innerHTML +=
-    `<p><a href="#">Suggested video for ${subsection} (placeholder)</a></p>`;
 }
