@@ -9,7 +9,9 @@ function selectSubject(subject) {
   const chapterDropdown = document.getElementById("chapterDropdown");
   chapterDropdown.innerHTML = '<option value="">-- Choose a Chapter --</option>';
 
-  let chapters = [];function selectSubject(subject) {
+  let chapters = [];
+  
+  function selectSubject(subject) {
   alert("You selected " + subject);
 
   document.getElementById("subject-selection").style.display = "none";
@@ -412,6 +414,7 @@ function submitTest() {
   document.getElementById("testResult").innerText =
     `You scored ${score} out of ${questions.length}`;
 }
+
 
 
 
