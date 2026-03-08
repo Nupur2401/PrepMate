@@ -26,7 +26,7 @@ function goHome() {
   toggleMenu();
 }
 
-// Home Screen
+// Screen 1 - Home Screen
 function selectSubject(subject) {
   alert("You selected " + subject);
 
@@ -34,7 +34,7 @@ function selectSubject(subject) {
   document.getElementById("subject-selection").style.display = "none";
   document.getElementById("chapter-selection").style.display = "block";
 
-  // Populate chapters
+  // Screen2 - Populate chapters
   const chapterDropdown = document.getElementById("chapterDropdown");
   chapterDropdown.innerHTML = '<option value="">-- Choose a Chapter --</option>';
 
@@ -53,6 +53,28 @@ function selectSubject(subject) {
   });
 }
 
+// 🔗 Integration with Copilot
+function fetchChapterInfo() {
+  const chapter = document.getElementById("chapterDropdown").value;
+  const infoBox = document.getElementById("chapterInfo");
+
+  if (!chapter) {
+    infoBox.innerHTML = "";
+    return;
+  }
+
+  // For now, show a placeholder while Copilot provides info
+  infoBox.innerHTML = `<p>Loading information about <strong>${chapter}</strong>...</p>`;
+
+  // Simulated integration: in a real app, this is where you'd call Copilot
+  // For example, using an API endpoint that sends the chapter name to Copilot
+  // and displays the response dynamically.
+  setTimeout(() => {
+    infoBox.innerHTML = `<h3>${chapter}</h3>
+      <p>This chapter covers key concepts and examples. Copilot can provide notes, explanations, and practice questions here.</p>`;
+  }, 1000);
+
+
 function goToStudyMode() {
   const chapter = document.getElementById("chapterDropdown").value;
   if (!chapter) {
@@ -70,5 +92,6 @@ function goToTestMode() {
   }
   alert("Test Mode for " + chapter + " coming soon!");
 }
+
 
 
