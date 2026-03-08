@@ -138,4 +138,86 @@ function viewSolution(index) {
   document.getElementById("answer-" + index).innerHTML = "Step-by-step solution (placeholder)";
 }
 
+function goToTestMode() {
+  const chapter = document.getElementById("chapterDropdown").value;
+  if (!chapter) {
+    alert("Please select a chapter first!");
+    return;
+  }
+
+  // Hide Chapter Selection, show Test Mode
+  document.getElementById("chapter-selection").style.display = "none";
+  document.getElementById("test-mode").style.display = "block";
+
+  // Load sample questions
+  const testContent = document.getElementById("testContent");
+  testContent.innerHTML = "";
+
+  let questions = [];
+  if (chapter === "Real Numbers") {
+    questions = [
+      {
+        q: "Q1: Which of the following is a prime number?",
+        options: ["4", "9", "11", "15"],
+        answer: "11"
+      },
+      {
+        q: "Q2: HCF of 12 and 18 is?",
+        options: ["2", "3", "6", "9"],
+        answer: "6"
+      }
+    ];
+  } else if (chapter === "Chemical Reactions") {
+    questions = [
+      {
+        q: "Q1: Which reaction produces a precipitate?",
+        options: ["Combination", "Double Displacement", "Decomposition", "Neutralization"],
+        answer: "Double Displacement"
+      },
+      {
+        q: "Q2: Which gas is released in a reaction of acid with metal?",
+        options: ["Oxygen", "Hydrogen", "Carbon dioxide", "Nitrogen"],
+        answer: "Hydrogen"
+      }
+    ];
+  } else {
+    questions = [
+      {
+        q: "Q1: Sample question for " + chapter,
+        options: ["Option A", "Option B", "Option C", "Option D"],
+        answer: "Option A"
+      }
+    ];
+  }
+
+  // Render questions
+  questions.forEach((item, index) => {
+    let html = `<p>${item.q}</p>`;
+    item.options.forEach(opt => {
+      html += `
+        <label>
+          <input type="radio" name="q${index}" value="${opt}"> ${opt}
+        </label>`;
+    });
+    testContent.innerHTML += html;
+  });
+
+  // Save questions for evaluation
+  window.currentTest = questions;
+}
+
+function submitTest() {
+  const questions = window.currentTest || [];
+  let score = 0;
+
+  questions.forEach((item, index) => {
+    const selected = document.querySelector(`input[name="q${index}"]:checked`);
+    if (selected && selected.value === item.answer) {
+      score++;
+    }
+  });
+
+  document.getElementById("testResult").innerText =
+    `You scored ${score} out of ${questions.length}`;
+}
 
