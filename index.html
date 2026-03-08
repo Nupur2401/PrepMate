@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>PrepMate</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Header -->
   <header>
     <h1>PrepMate</h1>
     <nav>
@@ -15,61 +14,43 @@
     </nav>
   </header>
 
-  <!-- Screen 1: Subject Selection -->
-  <main id="subject-selection">
-    <h2>Select Subject</h2>
-    <button onclick="selectSubject('Maths')">Maths</button>
-    <button onclick="selectSubject('Science')">Science</button>
-  </main>
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button class="tab-button active" onclick="showTab('notes')">Notes</button>
+    <button class="tab-button" onclick="showTab('exercise')">Exercise</button>
+    <button class="tab-button" onclick="showTab('revision')">Revision</button>
+  </div>
 
-  <!-- Screen 2: Chapter Selection -->
-  <section id="chapter-selection" style="display:none;">
-    <h2>Select Chapter</h2>
-    <label for="chapterDropdown">Choose a Chapter:</label>
-    <select id="chapterDropdown">
-      <option value="">-- Choose a Chapter --</option>
+  <!-- Notes Tab -->
+  <section id="notes" class="tab-content">
+    <h2>Notes</h2>
+    <select id="subsectionDropdown">
+      <option value="">-- Choose a Subsection --</option>
     </select>
     <br><br>
-    <button onclick="goToStudyMode()">Study</button>
-    <button onclick="goToTestMode()">Test</button>
+    <button onclick="loadNotes()">Load Notes</button>
+    <button onclick="moreExplanation()">More Explanation</button>
+    <button onclick="watchVideo()">Watch Video</button>
+    <div id="notesContent" class="content-box"></div>
   </section>
 
-  <!-- Screen 3: Study Mode -->
-  <section id="study-mode" style="display:none;">
-    <h2>Study Mode</h2>
-
-    <!-- Notes Tab -->
-    <div id="notes-tab">
-      <h3>Notes</h3>
-      <label for="subsectionDropdown">Choose a Subsection:</label>
-      <select id="subsectionDropdown">
-        <option value="">-- Choose a Subsection --</option>
-      </select>
-      <br><br>
-      <button onclick="loadNotes()">Load Notes</button>
-      <button onclick="moreExplanation()">More Explanation</button>
-      <button onclick="watchVideo()">Watch Video</button>
-
-      <!-- Notes content will appear here -->
-      <div id="notesContent" style="margin-top:20px; text-align:left;"></div>
-    </div>
-
-    <!-- Exercise Tab -->
-    <div id="exercise-tab" style="margin-top:30px;">
-      <h3>Exercise</h3>
-      <label for="exerciseDropdown">Choose an Exercise:</label>
-      <select id="exerciseDropdown">
-        <option value="">-- Choose an Exercise --</option>
-      </select>
-      <br><br>
-      <button onclick="loadExerciseQuestions()">Load Questions</button>
-
-      <!-- Questions will appear here -->
-      <div id="exerciseContent" style="margin-top:20px; text-align:left;"></div>
-    </div>
+  <!-- Exercise Tab -->
+  <section id="exercise" class="tab-content" style="display:none;">
+    <h2>Exercise</h2>
+    <select id="exerciseDropdown">
+      <option value="">-- Choose an Exercise --</option>
+    </select>
+    <br><br>
+    <button onclick="loadExerciseQuestions()">Load Questions</button>
+    <div id="exerciseContent" class="content-box"></div>
   </section>
 
-  <!-- Footer -->
+  <!-- Revision Tab -->
+  <section id="revision" class="tab-content" style="display:none;">
+    <h2>Revision</h2>
+    <p>Quick revision notes will appear here.</p>
+  </section>
+
   <footer>
     <p>PrepMate v1.0 (MVP)</p>
   </footer>
