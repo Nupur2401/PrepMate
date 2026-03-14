@@ -98,7 +98,7 @@
         async function callGemini(prompt) {
             try {
                 // The URL structure is critical: v1beta/models/model-name:generateContent
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${config.key}`;
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3:generateContent?key=${config.key}`;
                 
                 const response = await fetch(url, {
                     method: 'POST',
