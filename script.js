@@ -12,6 +12,8 @@ function goHome() {
 
 // Handle subject selection
 function selectSubject(subject) {
+  console.log("Subject selected:", subject); // Debug log
+
   // Hide subject screen, show chapter screen
   document.getElementById("subject-selection").style.display = "none";
   document.getElementById("chapter-selection").style.display = "block";
@@ -32,6 +34,7 @@ async function loadChapters(subject) {
     });
 
     const data = await response.json();
+    console.log("Gemini response:", data); // Debug log
 
     if (data.chapters) {
       populateDropdown(data.chapters);
