@@ -10,6 +10,7 @@
         .active-tab { border-bottom: 4px solid #2563eb; color: #2563eb; font-weight: 800; }
         .prose h2 { font-size: 1.25rem; font-weight: bold; margin-top: 1.5rem; color: #1e40af; border-left: 4px solid #2563eb; padding-left: 10px; }
         .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
+        .answer-box { transition: all 0.3s ease; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -20,14 +21,14 @@
             <div class="bg-blue-600 text-white px-2 py-1 rounded font-bold">PM</div>
             <span class="text-xl font-bold text-blue-900 tracking-tight">PrepMate</span>
         </div>
-        <button onclick="resetApp()" class="text-[10px] font-black text-gray-400 border px-2 py-1 rounded hover:bg-gray-50 transition">Reset Setup</button>
+        <button onclick="resetApp()" class="text-[10px] font-black text-gray-400 border px-2 py-1 rounded">Reset</button>
     </header>
 
     <main class="max-w-3xl mx-auto p-4 pb-24">
         <div id="setup-screen" class="bg-white p-8 rounded-3xl shadow-xl mt-10 border border-blue-50">
             <h2 class="text-2xl font-bold mb-4 text-blue-900">Welcome 🚀</h2>
             <input type="password" id="api-key-input" class="w-full p-4 border-2 border-gray-100 rounded-2xl mb-4 focus:border-blue-500 outline-none" placeholder="Paste Gemini API key here">
-            <button onclick="saveKey()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold">Launch PrepMate</button>
+            <button onclick="saveKey()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold">Launch</button>
         </div>
 
         <div id="subject-screen" class="hidden text-center py-10">
@@ -49,7 +50,7 @@
             <h2 id="sub-heading" class="text-2xl font-bold mb-6 text-blue-900">Chapters</h2>
             <div id="chap-loading" class="hidden py-4 text-blue-500 italic animate-pulse">Syncing Syllabus...</div>
             <select id="chapter-dropdown" class="w-full p-4 bg-white border-2 border-gray-100 rounded-2xl mb-8 shadow-sm outline-none"></select>
-            <button onclick="initMode()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md">Get Started</button>
+            <button onclick="initMode()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg">Get Started</button>
         </div>
 
         <div id="study-screen" class="hidden">
@@ -59,10 +60,10 @@
             </div>
             
             <nav class="flex border-b border-gray-100 mb-6 overflow-x-auto no-scrollbar">
-                <button onclick="switchTab('notes')" id="tab-notes" class="px-6 py-3 text-gray-400 whitespace-nowrap font-bold transition-all">Notes</button>
-                <button onclick="switchTab('exercise')" id="tab-exercise" class="px-6 py-3 text-gray-400 whitespace-nowrap font-bold transition-all">Exercise</button>
-                <button onclick="switchTab('revision')" id="tab-revision" class="px-6 py-3 text-gray-400 whitespace-nowrap font-bold transition-all">Revision</button>
-                <button onclick="switchTab('unit-test')" id="tab-unit-test" class="px-6 py-3 text-gray-400 whitespace-nowrap font-bold transition-all">Unit Test</button>
+                <button onclick="switchTab('notes')" id="tab-notes" class="px-6 py-3 text-gray-400 whitespace-nowrap font-bold">Notes</button>
+                <button onclick="switchTab('exercise')" id="tab-exercise" class="px-6 py-3 text-gray-400 whitespace-nowrap font-bold">Exercise</button>
+                <button onclick="switchTab('revision')" id="tab-revision" class="px-6 py-3 text-gray-400 whitespace-nowrap font-bold">Revision</button>
+                <button onclick="switchTab('test')" id="tab-test" class="px-6 py-3 text-gray-400 whitespace-nowrap font-bold">Unit Test</button>
             </nav>
 
             <div id="subsection-area" class="mb-6 p-4 bg-blue-50 rounded-2xl border border-blue-100 hidden">
@@ -113,9 +114,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                 });
-
                 const data = await response.json();
-                if (!response.ok) throw new Error(data.error?.message || "API connection failed");
                 const text = data.candidates[0].content.parts[0].text;
                 localStorage.setItem(cacheKey, text); 
                 return text;
@@ -129,11 +128,9 @@
             const drop = document.getElementById('chapter-dropdown');
             const load = document.getElementById('chap-loading');
             drop.classList.add('hidden'); load.classList.remove('hidden');
-
-            const res = await callGemini(`List all CBSE Class 10 ${s} chapters. Plain text, one per line, no numbers, no symbols.`, 'list');
+            const res = await callGemini(`List names of all CBSE Class 10 ${s} chapters.`, 'list');
             const chapters = res.split('\n').map(l => l.trim()).filter(l => l.length > 3)
                 .map(l => l.replace(/^[\d\.\-\s*]+/, '').replace(/\*\*/g, '').trim());
-
             drop.innerHTML = chapters.map(c => `<option value="${c}">${c}</option>`).join('');
             load.classList.add('hidden'); drop.classList.remove('hidden');
         }
@@ -142,14 +139,11 @@
             state.chapter = document.getElementById('chapter-dropdown').value;
             document.getElementById('current-info').innerText = `${state.subject} • ${state.chapter}`;
             showScreen('study-screen');
-            
             const subDrop = document.getElementById('subsection-dropdown');
             subDrop.innerHTML = `<option>Loading Topics...</option>`;
-            
-            const res = await callGemini(`List 5 major topics for CBSE 10th ${state.subject}: ${state.chapter}. Names only, one per line.`, 'subtopics');
+            const res = await callGemini(`List 5 topics for CBSE 10th ${state.subject}: ${state.chapter}.`, 'subtopics');
             const topics = res.split('\n').map(l => l.trim()).filter(l => l.length > 2)
                 .map(l => l.replace(/^[\d\.\-\s*]+/, '').replace(/\*\*/g, '').trim());
-
             subDrop.innerHTML = topics.map(t => `<option value="${t}">${t}</option>`).join('');
             switchTab('notes');
         }
@@ -162,42 +156,71 @@
             loadActiveContent();
         }
 
+        function toggleAnswer(id) {
+            const el = document.getElementById('ans-' + id);
+            el.classList.toggle('hidden');
+        }
+
         async function loadActiveContent() {
             const area = document.getElementById('response-area');
             const loader = document.getElementById('loader');
             const topic = document.getElementById('subsection-dropdown').value;
-            
             area.innerHTML = ""; loader.classList.remove('hidden');
 
             let prompt = "";
             let cacheSuffix = state.activeTab;
 
             if (state.activeTab === 'notes') {
-                prompt = `Provide detailed CBSE Class 10 notes for the topic "${topic}" in chapter "${state.chapter}" of ${state.subject}. Use ## for headers and * for bullets. Do not include introductory text or bold symbols.`;
+                prompt = `Explain CBSE 10th ${state.subject} topic: "${topic}". Rules: Start directly with ##, no intro sentences like "This guide covers", no rules, no horizontal rules (---), no bold symbols **.`;
                 cacheSuffix = `topic_${topic}`;
+            } else if (state.activeTab === 'exercise') {
+                prompt = `Provide 5 practice questions for CBSE 10th ${state.subject} chapter ${state.chapter}. 
+                Format: 
+                Q1: Question text
+                A1: Detailed solution
+                ...repeat...
+                Strictly no intro, no asterisks, no --- lines.`;
             } else {
-                prompt = `Provide ${state.activeTab} for CBSE 10th ${state.subject}: ${state.chapter}. Plain list style.`;
+                prompt = `Provide ${state.activeTab} for ${state.subject}: ${state.chapter}. Start content immediately. No intros.`;
             }
 
             let md = await callGemini(prompt, cacheSuffix);
             
-            // CLEANING LOGIC: Remove starting lines and bold asterisks
-            const lines = md.split('\n');
-            if (lines[0].toLowerCase().includes("here is") || lines[0].toLowerCase().includes("certainly")) {
-                lines.shift(); // Remove the "AI chatter" starting line
+            // Clean Logic
+            let lines = md.split('\n').map(l => l.trim()).filter(l => !l.startsWith('---') && l.length > 0);
+            if (lines.length > 0 && /^(this guide|certainly|here is|the following|welcome|covers)/i.test(lines[0])) lines.shift();
+
+            let finalHtml = "";
+
+            if (state.activeTab === 'exercise') {
+                // Parse Questions and Answers
+                let content = lines.join('\n').replace(/\*\*/g, '');
+                const qaPairs = content.split(/Q\d+:/g).filter(s => s.trim().length > 0);
+                
+                finalHtml = qaPairs.map((pair, index) => {
+                    const [q, a] = pair.split(/A\d+:/);
+                    return `
+                        <div class="mb-8 p-4 bg-white border border-gray-100 rounded-2xl shadow-sm">
+                            <p class="font-bold text-blue-900 mb-3">Question ${index + 1}: ${q.trim()}</p>
+                            <button onclick="toggleAnswer(${index})" class="text-xs bg-gray-100 px-3 py-1 rounded-full font-bold text-gray-500 hover:bg-blue-600 hover:text-white transition">View Answer</button>
+                            <div id="ans-${index}" class="hidden mt-4 p-4 bg-green-50 rounded-xl text-green-800 text-sm border-l-4 border-green-400">
+                                <b>Answer:</b><br>${a ? a.trim() : "Answer not found."}
+                            </div>
+                        </div>`;
+                }).join('');
+            } else {
+                finalHtml = lines.join('\n')
+                    .replace(/\*\*/g, '')
+                    .replace(/^## (.*$)/gim, '<h2 class="text-blue-800 font-bold">$1</h2>')
+                    .replace(/^\* (.*$)/gim, '<li class="ml-4 mb-2">$1</li>')
+                    .replace(/\n/g, '<br>');
             }
 
-            const cleanText = lines.join('\n')
-                .replace(/\*\*/g, '') // Remove all bold markers
-                .replace(/^## (.*$)/gim, '<h2 class="text-blue-800 font-bold">$1</h2>')
-                .replace(/^\* (.*$)/gim, '<li class="ml-4 mb-2">$1</li>')
-                .replace(/\n/g, '<br>');
-
-            area.innerHTML = cleanText;
+            area.innerHTML = finalHtml;
             loader.classList.add('hidden');
         }
 
-        function resetApp() { if(confirm("Reset settings?")) { localStorage.clear(); location.reload(); } }
+        function resetApp() { if(confirm("Reset?")) { localStorage.clear(); location.reload(); } }
         if(state.key) showScreen('subject-screen');
     </script>
 </body>
