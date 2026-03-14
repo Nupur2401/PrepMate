@@ -36,12 +36,53 @@
     <button onclick="goHome()">⬅ Back to Subjects</button>
   </section>
 
-  <!-- Screen 3: Chapter Details -->
-  <section id="chapter-details" style="display:none;">
+  <!-- Screen 3: Study Mode -->
+  <section id="study-mode" style="display:none;">
     <h2 id="chapterTitle"></h2>
-    <div id="chapterContent" class="content-box" aria-live="polite"></div>
+
+    <!-- Tabs -->
+    <div class="tab-bar">
+      <button onclick="showTab('notes')">Notes</button>
+      <button onclick="showTab('exercise')">Exercise</button>
+      <button onclick="showTab('revision')">Revision</button>
+      <button onclick="showTab('unitTest')">Unit Test</button>
+    </div>
+
+    <!-- Notes Tab -->
+    <div id="notesTab" class="tab-content" style="display:none;">
+      <h3>Notes</h3>
+      <select id="subsectionDropdown" onchange="fetchNotes()">
+        <option value="">-- Choose a Subsection --</option>
+      </select>
+      <div id="notesContent" class="content-box"></div>
+      <button onclick="fetchMoreExplanation()">More Explanation</button>
+      <button onclick="fetchVideo()">Watch Video</button>
+    </div>
+
+    <!-- Exercise Tab -->
+    <div id="exerciseTab" class="tab-content" style="display:none;">
+      <h3>Exercises</h3>
+      <select id="exerciseDropdown" onchange="fetchExerciseQuestions()">
+        <option value="">-- Choose an Exercise --</option>
+      </select>
+      <div id="exerciseQuestions" class="content-box"></div>
+    </div>
+
+    <!-- Revision Tab -->
+    <div id="revisionTab" class="tab-content" style="display:none;">
+      <h3>Revision Notes</h3>
+      <div id="revisionContent" class="content-box"></div>
+    </div>
+
+    <!-- Unit Test Tab -->
+    <div id="unitTestTab" class="tab-content" style="display:none;">
+      <h3>Unit Test</h3>
+      <button onclick="generateUnitTest()">Start Test</button>
+      <div id="unitTestContent" class="content-box"></div>
+    </div>
+
     <button onclick="backToChapters()">⬅ Back to Chapters</button>
-  </section>
+  </section>  
   
   <!-- Footer -->
   <footer>
