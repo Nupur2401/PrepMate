@@ -99,6 +99,65 @@ function populateDropdown(chapters) {
 
 function fetchChapterInfo() {
   const chapter = document.getElementById("chapterDropdown").value;
-  document.getElementById("chapterInfo").textContent =
-    chapter ? `You selected: ${chapter}` : "";
+
+  if (!chapter) {
+    document.getElementById("chapterInfo").textContent = "";
+    return;
+  }
+
+  // Hide Screen 2, show Screen 3
+  document.getElementById("chapter-selection").style.display = "none";
+  document.getElementById("chapter-details").style.display = "block";
+
+  // Show header
+  document.getElementById("chapterTitle").textContent = `Chapter: ${chapter}`;
+
+  // Fetch details from Gemini
+  loadChapterDetails(chapter);
+}
+
+async function loadChapterDetails(chapter) {
+  try {
+    document.getElementById("chapterContent").textContent = "Loading details…";
+
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=YOUR_API_KEY",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: `Give a clear, student-friendly summary of the CBSE Class 10 chapter "${chapter}". Include key concepts and formulas if relevant.`
+                }
+              ]
+            }
+          ]
+        })
+      }
+    );
+
+    const data = await response.json();
+    console.log("Gemini chapter details:", data);
+
+    if (!response.ok) {
+      document.getElementById("chapterContent").textContent =
+        "Gemini error: " + (data.error?.message || "Unknown error");
+      return;
+    }
+
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    document.getElementById("chapterContent").textContent = text;
+  } catch (error) {
+    console.error("Frontend error:", error);
+    document.getElementById("chapterContent").textContent =
+      "Error fetching chapter details.";
+  }
+}
+
+function backToChapters() {
+  document.getElementById("chapter-details").style.display = "none";
+  document.getElementById("chapter-selection").style.display = "block";
 }
