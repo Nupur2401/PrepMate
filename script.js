@@ -1,97 +1,72 @@
-// Toggle menu visibility
+// Toggle menu
 function toggleMenu() {
   const menu = document.getElementById("menu");
-  if (menu.style.display === "none" || menu.style.display === "") {
-    menu.style.display = "block";
-  } else {
-    menu.style.display = "none";
-  }
+  menu.style.display = menu.style.display === "none" ? "block" : "none";
 }
 
-// Go back to Screen 1 (Home)
+// Go back to home
 function goHome() {
-  // Show subject selection
   document.getElementById("subject-selection").style.display = "block";
-
-  // Hide other screens if they exist later
-  const chapterSelection = document.getElementById("chapter-selection");
-  const studyMode = document.getElementById("study-mode");
-  const testMode = document.getElementById("test-mode");
-
-  if (chapterSelection) chapterSelection.style.display = "none";
-  if (studyMode) studyMode.style.display = "none";
-  if (testMode) testMode.style.display = "none";
-
-  // Close menu
-  toggleMenu();
+  document.getElementById("chapter-selection").style.display = "none";
 }
 
-// Screen 1 - Home Screen
+// Handle subject selection
 function selectSubject(subject) {
-  alert("You selected " + subject);
-
-  // Hide subject selection, show chapter selection
+  // Hide subject screen, show chapter screen
   document.getElementById("subject-selection").style.display = "none";
   document.getElementById("chapter-selection").style.display = "block";
 
-  // Screen2 - Populate chapters
-  const chapterDropdown = document.getElementById("chapterDropdown");
-  chapterDropdown.innerHTML = '<option value="">-- Choose a Chapter --</option>';
+  // Load chapters for the chosen subject
+  loadChapters(subject);
+}
 
-  let chapters = [];
-  if (subject === "Maths") {
-    chapters = ["Real Numbers", "Polynomials", "Pair of Linear Equations", "Quadratic Equations"];
-  } else if (subject === "Science") {
-    chapters = ["Chemical Reactions", "Acids, Bases and Salts", "Metals and Non-Metals", "Carbon Compounds"];
+// Fetch chapters from backend
+async function loadChapters(subject) {
+  try {
+    const response = await fetch("http://localhost:3000/gemini", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prompt: `List CBSE Class 10 ${subject} chapters`
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.chapters) {
+      populateDropdown(data.chapters);
+    } else {
+      console.error("No chapters returned:", data);
+    }
+  } catch (error) {
+    console.error("Frontend error:", error);
   }
+}
+
+// Populate dropdown with chapters
+function populateDropdown(chapters) {
+  const dropdown = document.getElementById("chapterDropdown");
+  dropdown.innerHTML = '<option value="">-- Choose a Chapter --</option>';
 
   chapters.forEach(chapter => {
     const option = document.createElement("option");
     option.value = chapter;
     option.textContent = chapter;
-    chapterDropdown.appendChild(option);
+    dropdown.appendChild(option);
   });
 }
 
-// 🔗 Integration with Copilot
+// Placeholder functions for later
 function fetchChapterInfo() {
   const chapter = document.getElementById("chapterDropdown").value;
-  const infoBox = document.getElementById("chapterInfo");
-
-  if (!chapter) {
-    infoBox.innerHTML = "";
-    return;
-  }
-
-  // For now, show a placeholder while Copilot provides info
-  infoBox.innerHTML = `<p>Loading information about <strong>${chapter}</strong>...</p>`;
-
-  // Simulated integration: in a real app, this is where you'd call Copilot
-  // For example, using an API endpoint that sends the chapter name to Copilot
-  // and displays the response dynamically.
-  setTimeout(() => {
-    infoBox.innerHTML = `<h3>${chapter}</h3>
-      <p>This chapter covers key concepts and examples. Copilot can provide notes, explanations, and practice questions here.</p>`;
-  }, 1000);
-
+  document.getElementById("chapterInfo").textContent =
+    chapter ? `You selected: ${chapter}` : "";
+}
 
 function goToStudyMode() {
-  const chapter = document.getElementById("chapterDropdown").value;
-  if (!chapter) {
-    alert("Please select a chapter first!");
-    return;
-  }
-  alert("Study Mode for " + chapter + " coming soon!");
+  alert("Study mode coming soon!");
 }
 
 function goToTestMode() {
-  const chapter = document.getElementById("chapterDropdown").value;
-  if (!chapter) {
-    alert("Please select a chapter first!");
-    return;
-  }
-  alert("Test Mode for " + chapter + " coming soon!");
+  alert("Test mode coming soon!");
 }
-
-
-
