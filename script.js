@@ -23,7 +23,7 @@ async function loadChapters(subject) {
     document.getElementById("chapterInfo").textContent = "Fetching chapters…";
 
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBEAeX4B73jHLViPcfMsJkh30Ir7xfh-Wk",
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBGvHRZLRZk-7qVu25e_mGD_5EpyXBIndI",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
