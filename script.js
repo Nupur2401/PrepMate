@@ -14,7 +14,7 @@ function selectSubject(subject) {
   document.getElementById("subject-selection").style.display = "none";
   document.getElementById("chapter-selection").style.display = "block";
 
-  // Call backend to get chapters
+  // Call Gemini directly to get chapters
   loadChapters(subject);
 }
 
@@ -42,7 +42,13 @@ async function loadChapters(subject) {
     const data = await response.json();
     console.log("Gemini raw response:", data);
 
-    // Extract text
+    if (!response.ok) {
+      document.getElementById("chapterInfo").textContent =
+        "Gemini error: " + (data.error?.message || "Unknown error");
+      return;
+    }
+
+    // Extract text safely
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
     const chapters = text.split("\n").map(c => c.trim()).filter(Boolean);
 
@@ -59,6 +65,7 @@ async function loadChapters(subject) {
       "Error fetching chapters.";
   }
 }
+
 function populateDropdown(chapters) {
   const dropdown = document.getElementById("chapterDropdown");
   dropdown.innerHTML = '<option value="">-- Choose a Chapter --</option>';
