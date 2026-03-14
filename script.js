@@ -31,7 +31,7 @@ async function loadChapters(subject) {
           contents: [
             {
               parts: [
-                { text: `List CBSE Class 10 ${subject} chapters` }
+                { text: `{ text: `List all CBSE Class 10 ${subject} chapters as plain text, one per line, no extra words.` }` }
               ]
             }
           ]
