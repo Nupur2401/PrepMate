@@ -17,7 +17,7 @@ nav button {
   cursor: pointer;
 }
 
-main {
+main, section {
   margin-top: 50px;
 }
 
@@ -34,4 +34,11 @@ footer {
   position: fixed;
   bottom: 0;
   width: 100%;
+}
+
+.content-box {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  min-height: 40px;
 }
