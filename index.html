@@ -8,7 +8,7 @@
     <style>
         .hidden { display: none; }
         .active-tab { border-bottom: 4px solid #2563eb; color: #2563eb; font-weight: 800; }
-        .prose h2 { font-size: 1.3rem; font-weight: bold; margin-top: 1.5rem; color: #1e3a8a; }
+        .prose h2 { font-size: 1.2rem; font-weight: bold; margin-top: 1.2rem; color: #1e40af; }
         .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
@@ -20,61 +20,63 @@
             <div class="bg-blue-600 text-white px-2 py-1 rounded font-bold">PM</div>
             <span class="text-xl font-bold text-blue-900 tracking-tight">PrepMate</span>
         </div>
-        <button onclick="resetApp()" class="text-[10px] font-black text-gray-400 border px-2 py-1 rounded hover:bg-gray-50 transition">Reset Setup</button>
+        <button onclick="resetApp()" class="text-[10px] font-black text-gray-400 border px-2 py-1 rounded">Reset</button>
     </header>
 
     <main class="max-w-3xl mx-auto p-4 pb-24">
+        
         <div id="setup-screen" class="bg-white p-8 rounded-3xl shadow-xl mt-10 border border-blue-50">
-            <h2 class="text-2xl font-bold mb-4 text-blue-900">Welcome Student 🚀</h2>
-            <p class="text-sm text-gray-500 mb-6">Enter your Gemini API key from Google AI Studio.</p>
-            <input type="password" id="api-key-input" class="w-full p-4 border-2 border-gray-100 rounded-2xl mb-4 focus:border-blue-500 outline-none" placeholder="Paste AIzaSy... here">
-            <button onclick="saveKey()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg">Start Learning</button>
+            <h2 class="text-2xl font-bold mb-4 text-blue-900">Welcome 🚀</h2>
+            <input type="password" id="api-key-input" class="w-full p-4 border-2 border-gray-100 rounded-2xl mb-4 focus:border-blue-500 outline-none" placeholder="Paste Gemini API key here">
+            <button onclick="saveKey()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold">Launch App</button>
         </div>
 
         <div id="subject-screen" class="hidden text-center py-10">
-            <h2 class="text-2xl font-black mb-8 text-gray-800 uppercase tracking-tight">Select Subject</h2>
-            <div class="grid grid-cols-2 gap-6">
-                <button onclick="selectSubject('Maths')" class="p-10 bg-white border-2 border-transparent hover:border-blue-500 rounded-3xl shadow-sm transition-all group">
-                    <span class="text-5xl block mb-4 group-hover:scale-110 transition">🔢</span>
-                    <span class="font-bold text-lg text-gray-700">Mathematics</span>
+            <h2 class="text-xl font-black mb-8 text-gray-500 uppercase">Select Subject</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="selectSubject('Maths')" class="p-8 bg-white border-2 border-transparent hover:border-blue-500 rounded-3xl shadow-sm transition-all">
+                    <span class="text-4xl block mb-2">🔢</span>
+                    <span class="font-bold text-gray-700">Maths</span>
                 </button>
-                <button onclick="selectSubject('Science')" class="p-10 bg-white border-2 border-transparent hover:border-blue-500 rounded-3xl shadow-sm transition-all group">
-                    <span class="text-5xl block mb-4 group-hover:scale-110 transition">🧪</span>
-                    <span class="font-bold text-lg text-gray-700">Science</span>
+                <button onclick="selectSubject('Science')" class="p-8 bg-white border-2 border-transparent hover:border-blue-500 rounded-3xl shadow-sm transition-all">
+                    <span class="text-4xl block mb-2">🧪</span>
+                    <span class="font-bold text-gray-700">Science</span>
                 </button>
             </div>
         </div>
 
         <div id="chapter-screen" class="hidden">
-            <button onclick="showScreen('subject-screen')" class="text-blue-600 mb-4 text-sm font-bold flex items-center">← Change Subject</button>
+            <button onclick="showScreen('subject-screen')" class="text-blue-600 mb-4 text-sm font-bold">← Back</button>
             <h2 id="sub-heading" class="text-2xl font-bold mb-6 text-blue-900">Chapters</h2>
-            <div id="chap-loading" class="hidden py-4 text-blue-500 italic animate-pulse">Consulting CBSE Syllabus...</div>
-            <select id="chapter-dropdown" class="w-full p-4 bg-white border-2 border-gray-100 rounded-2xl mb-8 shadow-sm outline-none appearance-none cursor-pointer"></select>
-            <div class="flex gap-4">
-                <button onclick="initMode('Study')" class="flex-1 bg-green-500 text-white py-4 rounded-2xl font-bold text-lg shadow-md hover:bg-green-600 transition">Study Mode</button>
-                <button onclick="initMode('Test')" class="flex-1 bg-orange-500 text-white py-4 rounded-2xl font-bold text-lg shadow-md hover:bg-orange-600 transition">Test Mode</button>
-            </div>
+            <div id="chap-loading" class="hidden py-4 text-blue-500 italic animate-pulse tracking-tight">Fetching syllabus...</div>
+            <select id="chapter-dropdown" class="w-full p-4 bg-white border-2 border-gray-100 rounded-2xl mb-8 shadow-sm outline-none"></select>
+            <button onclick="initMode()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md">Enter Study Room</button>
         </div>
 
         <div id="study-screen" class="hidden">
             <div class="flex items-center justify-between mb-4">
-                <button onclick="showScreen('chapter-screen')" class="text-blue-600 text-sm font-bold">← Back</button>
-                <span id="current-info" class="text-[10px] font-black text-gray-300 uppercase tracking-widest"></span>
+                <button onclick="showScreen('chapter-screen')" class="text-blue-600 text-sm font-bold">← Chapters</button>
+                <span id="current-info" class="text-[10px] font-black text-gray-400 uppercase tracking-widest"></span>
             </div>
             
             <nav class="flex border-b border-gray-100 mb-6 overflow-x-auto no-scrollbar">
-                <button onclick="loadContent('notes')" id="tab-notes" class="px-6 py-3 text-gray-400 whitespace-nowrap font-bold transition-all">Notes</button>
-                <button onclick="loadContent('exercise')" id="tab-exercise" class="px-6 py-3 text-gray-400 whitespace-nowrap font-bold transition-all">Exercise</button>
-                <button onclick="loadContent('revision')" id="tab-revision" class="px-6 py-3 text-gray-400 whitespace-nowrap font-bold transition-all">Revision</button>
-                <button onclick="loadContent('unit-test')" id="tab-unit-test" class="px-6 py-3 text-gray-400 whitespace-nowrap font-bold transition-all">Unit Test</button>
+                <button onclick="switchTab('notes')" id="tab-notes" class="px-6 py-2 text-gray-400 whitespace-nowrap font-bold">Notes</button>
+                <button onclick="switchTab('exercise')" id="tab-exercise" class="px-6 py-2 text-gray-400 whitespace-nowrap font-bold">Exercise</button>
+                <button onclick="switchTab('revision')" id="tab-revision" class="px-6 py-2 text-gray-400 whitespace-nowrap font-bold">Revision</button>
+                <button onclick="switchTab('test')" id="tab-test" class="px-6 py-2 text-gray-400 whitespace-nowrap font-bold">Unit Test</button>
             </nav>
 
-            <div id="content-display" class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50 min-h-[450px]">
-                <div id="loader" class="hidden flex flex-col items-center justify-center py-24">
+            <div id="subsection-area" class="mb-6 hidden">
+                <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">Select Topic</p>
+                <select id="subsection-dropdown" onchange="loadActiveContent()" class="w-full p-3 bg-blue-50 border-none rounded-xl text-blue-800 font-bold outline-none cursor-pointer"></select>
+            </div>
+
+            <div id="content-display" class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50 min-h-[400px]">
+                <div id="loader" class="hidden flex flex-col items-center justify-center py-20">
                     <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                    <p class="mt-4 text-gray-400 font-medium italic">Fetching your data...</p>
+                    <p class="mt-4 text-gray-400 font-medium italic">Gemini 3.1 is thinking...</p>
                 </div>
-                <div id="response-area" class="prose max-w-none text-gray-700 leading-relaxed"></div>
+                <div id="response-area" class="prose max-w-none text-gray-700"></div>
             </div>
         </div>
     </main>
@@ -83,11 +85,11 @@
         let state = {
             key: localStorage.getItem('pm_key'),
             subject: '',
-            chapter: ''
+            chapter: '',
+            activeTab: 'notes'
         };
 
-        // Standardized Model Alias for 2026 Stable API
-        const MODEL = "gemini-1.5-flash"; 
+        const MODEL = "gemini-3.1-flash-lite-preview";
 
         function showScreen(id) {
             ['setup-screen', 'subject-screen', 'chapter-screen', 'study-screen'].forEach(s => 
@@ -100,8 +102,8 @@
             if(val) { localStorage.setItem('pm_key', val); state.key = val; showScreen('subject-screen'); }
         }
 
-        async function callGemini(prompt, tabName) {
-            const cacheKey = `cache_${state.subject}_${state.chapter}_${tabName}`.replace(/\s+/g, '_').toLowerCase();
+        async function callGemini(prompt, cacheKeySuffix) {
+            const cacheKey = `cache_${state.subject}_${state.chapter}_${cacheKeySuffix}`.replace(/\s+/g, '_').toLowerCase();
             const cached = localStorage.getItem(cacheKey);
             if(cached) return cached;
 
@@ -114,17 +116,13 @@
                 });
 
                 const data = await response.json();
-                if (!response.ok) throw new Error(data.error?.message || "Connection Error");
+                if (!response.ok) throw new Error(data.error?.message || "API failed");
 
-                if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
-                    const text = data.candidates[0].content.parts[0].text;
-                    localStorage.setItem(cacheKey, text); 
-                    return text;
-                }
-                return "Empty response from AI.";
+                const text = data.candidates[0].content.parts[0].text;
+                localStorage.setItem(cacheKey, text); 
+                return text;
             } catch (e) {
-                console.error(e);
-                return `<div class="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 font-medium">⚠️ Error: ${e.message}</div>`;
+                return `Error: ${e.message}`;
             }
         }
 
@@ -132,66 +130,78 @@
             state.subject = s;
             document.getElementById('sub-heading').innerText = s + " Chapters";
             showScreen('chapter-screen');
-            
             const drop = document.getElementById('chapter-dropdown');
             const load = document.getElementById('chap-loading');
-            drop.classList.add('hidden');
-            load.classList.remove('hidden');
+            drop.classList.add('hidden'); load.classList.remove('hidden');
 
-            const res = await callGemini(`List only the names of all chapters in CBSE Class 10 ${s}. No numbers, no bolding, no prefixes.`, 'list');
-            
-            if (res.includes("Error:")) {
-                load.innerHTML = res;
-                return;
-            }
-
-            // Clean Chapter List logic: Removes numbers, dashes, and bolding **
-            const chapters = res.split('\n')
-                .map(line => line.trim())
-                .filter(line => line.length > 3) 
-                .map(line => line.replace(/^[\d\.\-\s*]+/, '').replace(/\*\*/g, '').trim());
+            const res = await callGemini(`List only the names of all CBSE Class 10 ${s} chapters. No numbers, no extra text.`, 'list');
+            const chapters = res.split('\n').map(l => l.trim()).filter(l => l.length > 3)
+                .map(l => l.replace(/^[\d\.\-\s*]+/, '').replace(/\*\*/g, '').trim());
 
             drop.innerHTML = chapters.map(c => `<option value="${c}">${c}</option>`).join('');
-            
-            load.classList.add('hidden');
-            drop.classList.remove('hidden');
+            load.classList.add('hidden'); drop.classList.remove('hidden');
         }
 
-        function initMode(m) {
+        async function initMode() {
             state.chapter = document.getElementById('chapter-dropdown').value;
             document.getElementById('current-info').innerText = `${state.subject} • ${state.chapter}`;
             showScreen('study-screen');
-            loadContent('notes');
+            
+            // Clear and Load Subsections
+            const subDrop = document.getElementById('subsection-dropdown');
+            subDrop.innerHTML = `<option>Loading Topics...</option>`;
+            
+            const res = await callGemini(`List 5 main sub-topics for CBSE 10th ${state.subject} chapter: ${state.chapter}. Plain text only, one per line.`, 'sub_list');
+            const subTopics = res.split('\n').map(l => l.trim()).filter(l => l.length > 2)
+                .map(l => l.replace(/^[\d\.\-\s*]+/, '').replace(/\*\*/g, '').trim());
+
+            subDrop.innerHTML = subTopics.map(t => `<option value="${t}">${t}</option>`).join('');
+            switchTab('notes');
         }
 
-        async function loadContent(tab) {
+        function switchTab(tab) {
+            state.activeTab = tab;
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-tab'));
             document.getElementById('tab-' + tab).classList.add('active-tab');
+            
+            // Toggle subsection dropdown visibility
+            document.getElementById('subsection-area').classList.toggle('hidden', tab !== 'notes');
+            
+            loadActiveContent();
+        }
 
+        async function loadActiveContent() {
             const area = document.getElementById('response-area');
             const loader = document.getElementById('loader');
+            const topic = document.getElementById('subsection-dropdown').value;
+            
             area.innerHTML = "";
             loader.classList.remove('hidden');
 
-            const prompts = {
-                notes: `Detailed CBSE Class 10 ${state.subject} notes for ${state.chapter}. Use headings (##) and bullets.`,
-                exercise: `5 Important practice questions with solutions for CBSE 10th ${state.subject}, Chapter: ${state.chapter}.`,
-                revision: `10-point revision summary for ${state.subject}: ${state.chapter}.`,
-                'unit-test': `A 20-mark unit test for ${state.chapter} for CBSE 10th ${state.subject}.`
-            };
+            let prompt = "";
+            let cacheSuffix = state.activeTab;
 
-            let md = await callGemini(prompts[tab], tab);
-            
-            // Basic MD to HTML cleaning
+            if (state.activeTab === 'notes') {
+                prompt = `Give detailed CBSE Class 10 ${state.subject} notes for the topic "${topic}" within the chapter "${state.chapter}". Use headings (##) and bullet points.`;
+                cacheSuffix = `notes_${topic}`;
+            } else if (state.activeTab === 'exercise') {
+                prompt = `Generate 5 important questions with solutions for CBSE 10th ${state.subject}: ${state.chapter}.`;
+            } else if (state.activeTab === 'revision') {
+                prompt = `Give a 10-point revision summary for ${state.subject}: ${state.chapter}.`;
+            } else {
+                prompt = `Generate a 20-mark unit test for CBSE 10th ${state.subject}: ${state.chapter}.`;
+            }
+
+            const md = await callGemini(prompt, cacheSuffix);
             area.innerHTML = md
-                .replace(/^## (.*$)/gim, '<h2 class="text-blue-800 font-bold mt-6 mb-2">$1</h2>')
-                .replace(/^\* (.*$)/gim, '<li class="ml-4 list-disc mb-1">$1</li>')
+                .replace(/^## (.*$)/gim, '<h2 class="text-blue-800 font-bold mt-4">$1</h2>')
+                .replace(/^\* (.*$)/gim, '<li class="ml-4">$1</li>')
                 .replace(/\n/g, '<br>');
 
             loader.classList.add('hidden');
         }
 
-        function resetApp() { if(confirm("Clear data and Reset?")) { localStorage.clear(); location.reload(); } }
+        function resetApp() { if(confirm("Clear data?")) { localStorage.clear(); location.reload(); } }
         if(state.key) showScreen('subject-screen');
     </script>
 </body>
