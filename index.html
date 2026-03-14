@@ -8,7 +8,7 @@
     <style>
         .hidden { display: none; }
         .active-tab { border-bottom: 4px solid #2563eb; color: #2563eb; font-weight: 800; }
-        .prose h2 { font-size: 1.2rem; font-weight: bold; margin-top: 1.2rem; color: #1e40af; }
+        .prose h2 { font-size: 1.25rem; font-weight: bold; margin-top: 1.5rem; color: #1e40af; border-left: 4px solid #2563eb; padding-left: 10px; }
         .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
@@ -20,63 +20,63 @@
             <div class="bg-blue-600 text-white px-2 py-1 rounded font-bold">PM</div>
             <span class="text-xl font-bold text-blue-900 tracking-tight">PrepMate</span>
         </div>
-        <button onclick="resetApp()" class="text-[10px] font-black text-gray-400 border px-2 py-1 rounded">Reset</button>
+        <button onclick="resetApp()" class="text-[10px] font-black text-gray-400 border px-2 py-1 rounded hover:bg-gray-50 transition">Reset Setup</button>
     </header>
 
     <main class="max-w-3xl mx-auto p-4 pb-24">
-        
         <div id="setup-screen" class="bg-white p-8 rounded-3xl shadow-xl mt-10 border border-blue-50">
             <h2 class="text-2xl font-bold mb-4 text-blue-900">Welcome 🚀</h2>
-            <input type="password" id="api-key-input" class="w-full p-4 border-2 border-gray-100 rounded-2xl mb-4 focus:border-blue-500 outline-none" placeholder="Paste Gemini API key here">
-            <button onclick="saveKey()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold">Launch App</button>
+            <p class="text-sm text-gray-500 mb-6">Enter your Gemini API key to start studying.</p>
+            <input type="password" id="api-key-input" class="w-full p-4 border-2 border-gray-100 rounded-2xl mb-4 focus:border-blue-500 outline-none" placeholder="Paste API key here">
+            <button onclick="saveKey()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg">Launch PrepMate</button>
         </div>
 
         <div id="subject-screen" class="hidden text-center py-10">
-            <h2 class="text-xl font-black mb-8 text-gray-500 uppercase">Select Subject</h2>
-            <div class="grid grid-cols-2 gap-4">
-                <button onclick="selectSubject('Maths')" class="p-8 bg-white border-2 border-transparent hover:border-blue-500 rounded-3xl shadow-sm transition-all">
-                    <span class="text-4xl block mb-2">🔢</span>
-                    <span class="font-bold text-gray-700">Maths</span>
+            <h2 class="text-2xl font-black mb-8 text-gray-800 uppercase">Select Subject</h2>
+            <div class="grid grid-cols-2 gap-6">
+                <button onclick="selectSubject('Maths')" class="p-10 bg-white border-2 border-transparent hover:border-blue-500 rounded-3xl shadow-sm transition-all group">
+                    <span class="text-5xl block mb-4 group-hover:scale-110 transition">🔢</span>
+                    <span class="font-bold text-lg">Maths</span>
                 </button>
-                <button onclick="selectSubject('Science')" class="p-8 bg-white border-2 border-transparent hover:border-blue-500 rounded-3xl shadow-sm transition-all">
-                    <span class="text-4xl block mb-2">🧪</span>
-                    <span class="font-bold text-gray-700">Science</span>
+                <button onclick="selectSubject('Science')" class="p-10 bg-white border-2 border-transparent hover:border-blue-500 rounded-3xl shadow-sm transition-all group">
+                    <span class="text-5xl block mb-4 group-hover:scale-110 transition">🧪</span>
+                    <span class="font-bold text-lg">Science</span>
                 </button>
             </div>
         </div>
 
         <div id="chapter-screen" class="hidden">
-            <button onclick="showScreen('subject-screen')" class="text-blue-600 mb-4 text-sm font-bold">← Back</button>
+            <button onclick="showScreen('subject-screen')" class="text-blue-600 mb-4 text-sm font-bold flex items-center">← Subjects</button>
             <h2 id="sub-heading" class="text-2xl font-bold mb-6 text-blue-900">Chapters</h2>
-            <div id="chap-loading" class="hidden py-4 text-blue-500 italic animate-pulse tracking-tight">Fetching syllabus...</div>
-            <select id="chapter-dropdown" class="w-full p-4 bg-white border-2 border-gray-100 rounded-2xl mb-8 shadow-sm outline-none"></select>
-            <button onclick="initMode()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md">Enter Study Room</button>
+            <div id="chap-loading" class="hidden py-4 text-blue-500 italic animate-pulse">Syncing Syllabus...</div>
+            <select id="chapter-dropdown" class="w-full p-4 bg-white border-2 border-gray-100 rounded-2xl mb-8 shadow-sm outline-none cursor-pointer"></select>
+            <button onclick="initMode()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg shadow-md">Get Started</button>
         </div>
 
         <div id="study-screen" class="hidden">
             <div class="flex items-center justify-between mb-4">
-                <button onclick="showScreen('chapter-screen')" class="text-blue-600 text-sm font-bold">← Chapters</button>
+                <button onclick="showScreen('chapter-screen')" class="text-blue-600 text-sm font-bold">← Back</button>
                 <span id="current-info" class="text-[10px] font-black text-gray-400 uppercase tracking-widest"></span>
             </div>
             
             <nav class="flex border-b border-gray-100 mb-6 overflow-x-auto no-scrollbar">
-                <button onclick="switchTab('notes')" id="tab-notes" class="px-6 py-2 text-gray-400 whitespace-nowrap font-bold">Notes</button>
-                <button onclick="switchTab('exercise')" id="tab-exercise" class="px-6 py-2 text-gray-400 whitespace-nowrap font-bold">Exercise</button>
-                <button onclick="switchTab('revision')" id="tab-revision" class="px-6 py-2 text-gray-400 whitespace-nowrap font-bold">Revision</button>
-                <button onclick="switchTab('test')" id="tab-test" class="px-6 py-2 text-gray-400 whitespace-nowrap font-bold">Unit Test</button>
+                <button onclick="switchTab('notes')" id="tab-notes" class="px-6 py-3 text-gray-400 whitespace-nowrap font-bold transition-all">Notes</button>
+                <button onclick="switchTab('exercise')" id="tab-exercise" class="px-6 py-3 text-gray-400 whitespace-nowrap font-bold transition-all">Exercise</button>
+                <button onclick="switchTab('revision')" id="tab-revision" class="px-6 py-3 text-gray-400 whitespace-nowrap font-bold transition-all">Revision</button>
+                <button onclick="switchTab('unit-test')" id="tab-unit-test" class="px-6 py-3 text-gray-400 whitespace-nowrap font-bold transition-all">Unit Test</button>
             </nav>
 
-            <div id="subsection-area" class="mb-6 hidden">
-                <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">Select Topic</p>
-                <select id="subsection-dropdown" onchange="loadActiveContent()" class="w-full p-3 bg-blue-50 border-none rounded-xl text-blue-800 font-bold outline-none cursor-pointer"></select>
+            <div id="subsection-area" class="mb-6 p-4 bg-blue-50 rounded-2xl border border-blue-100 hidden">
+                <label class="text-[10px] font-black text-blue-400 uppercase mb-2 block tracking-widest">Select Sub-Topic</label>
+                <select id="subsection-dropdown" onchange="loadActiveContent()" class="w-full bg-transparent text-blue-900 font-bold outline-none cursor-pointer text-lg"></select>
             </div>
 
-            <div id="content-display" class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50 min-h-[400px]">
-                <div id="loader" class="hidden flex flex-col items-center justify-center py-20">
+            <div id="content-display" class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50 min-h-[450px]">
+                <div id="loader" class="hidden flex flex-col items-center justify-center py-24 text-center">
                     <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                    <p class="mt-4 text-gray-400 font-medium italic">Gemini 3.1 is thinking...</p>
+                    <p class="mt-4 text-gray-400 font-medium italic">Gemini 3.1 is fetching topic details...</p>
                 </div>
-                <div id="response-area" class="prose max-w-none text-gray-700"></div>
+                <div id="response-area" class="prose max-w-none text-gray-700 leading-relaxed"></div>
             </div>
         </div>
     </main>
@@ -116,7 +116,7 @@
                 });
 
                 const data = await response.json();
-                if (!response.ok) throw new Error(data.error?.message || "API failed");
+                if (!response.ok) throw new Error(data.error?.message || "API connection failed");
 
                 const text = data.candidates[0].content.parts[0].text;
                 localStorage.setItem(cacheKey, text); 
@@ -134,7 +134,7 @@
             const load = document.getElementById('chap-loading');
             drop.classList.add('hidden'); load.classList.remove('hidden');
 
-            const res = await callGemini(`List only the names of all CBSE Class 10 ${s} chapters. No numbers, no extra text.`, 'list');
+            const res = await callGemini(`List all CBSE Class 10 ${s} chapter names. Plain text, one per line, no numbers.`, 'list');
             const chapters = res.split('\n').map(l => l.trim()).filter(l => l.length > 3)
                 .map(l => l.replace(/^[\d\.\-\s*]+/, '').replace(/\*\*/g, '').trim());
 
@@ -147,15 +147,15 @@
             document.getElementById('current-info').innerText = `${state.subject} • ${state.chapter}`;
             showScreen('study-screen');
             
-            // Clear and Load Subsections
+            // Dynamic Topic Generation
             const subDrop = document.getElementById('subsection-dropdown');
-            subDrop.innerHTML = `<option>Loading Topics...</option>`;
+            subDrop.innerHTML = `<option>Analyzing Chapter Topics...</option>`;
             
-            const res = await callGemini(`List 5 main sub-topics for CBSE 10th ${state.subject} chapter: ${state.chapter}. Plain text only, one per line.`, 'sub_list');
-            const subTopics = res.split('\n').map(l => l.trim()).filter(l => l.length > 2)
+            const res = await callGemini(`Identify 5 major sub-topics for CBSE 10th ${state.subject} chapter: ${state.chapter}. Names only, one per line.`, 'subtopics');
+            const topics = res.split('\n').map(l => l.trim()).filter(l => l.length > 2)
                 .map(l => l.replace(/^[\d\.\-\s*]+/, '').replace(/\*\*/g, '').trim());
 
-            subDrop.innerHTML = subTopics.map(t => `<option value="${t}">${t}</option>`).join('');
+            subDrop.innerHTML = topics.map(t => `<option value="${t}">${t}</option>`).join('');
             switchTab('notes');
         }
 
@@ -164,7 +164,7 @@
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-tab'));
             document.getElementById('tab-' + tab).classList.add('active-tab');
             
-            // Toggle subsection dropdown visibility
+            // Show Topic selector only on Notes tab
             document.getElementById('subsection-area').classList.toggle('hidden', tab !== 'notes');
             
             loadActiveContent();
@@ -182,26 +182,28 @@
             let cacheSuffix = state.activeTab;
 
             if (state.activeTab === 'notes') {
-                prompt = `Give detailed CBSE Class 10 ${state.subject} notes for the topic "${topic}" within the chapter "${state.chapter}". Use headings (##) and bullet points.`;
-                cacheSuffix = `notes_${topic}`;
+                prompt = `Explain the sub-topic "${topic}" from CBSE Class 10 ${state.subject} Chapter: "${state.chapter}". Provide detailed, student-friendly notes with headings (##) and bullet points.`;
+                cacheSuffix = `topic_${topic}`;
             } else if (state.activeTab === 'exercise') {
-                prompt = `Generate 5 important questions with solutions for CBSE 10th ${state.subject}: ${state.chapter}.`;
+                prompt = `5 Practice questions with detailed solutions for CBSE Class 10 ${state.subject}: ${state.chapter}.`;
             } else if (state.activeTab === 'revision') {
-                prompt = `Give a 10-point revision summary for ${state.subject}: ${state.chapter}.`;
+                prompt = `Quick 10-point revision summary for ${state.subject}: ${state.chapter}.`;
             } else {
-                prompt = `Generate a 20-mark unit test for CBSE 10th ${state.subject}: ${state.chapter}.`;
+                prompt = `Generate a 20-mark unit test for CBSE Class 10 ${state.subject}: ${state.chapter}. Include a marking scheme.`;
             }
 
             const md = await callGemini(prompt, cacheSuffix);
+            
+            // Markdown to HTML conversion
             area.innerHTML = md
-                .replace(/^## (.*$)/gim, '<h2 class="text-blue-800 font-bold mt-4">$1</h2>')
-                .replace(/^\* (.*$)/gim, '<li class="ml-4">$1</li>')
+                .replace(/^## (.*$)/gim, '<h2 class="text-blue-800 font-bold">$1</h2>')
+                .replace(/^\* (.*$)/gim, '<li class="ml-4 mb-2">$1</li>')
                 .replace(/\n/g, '<br>');
 
             loader.classList.add('hidden');
         }
 
-        function resetApp() { if(confirm("Clear data?")) { localStorage.clear(); location.reload(); } }
+        function resetApp() { if(confirm("Reset all settings?")) { localStorage.clear(); location.reload(); } }
         if(state.key) showScreen('subject-screen');
     </script>
 </body>
