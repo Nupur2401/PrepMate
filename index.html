@@ -26,7 +26,7 @@
     <main class="max-w-3xl mx-auto p-4 pb-24">
         <div id="setup-screen" class="bg-white p-8 rounded-3xl shadow-xl mt-10 border border-blue-50">
             <h2 class="text-2xl font-bold mb-4 text-blue-900">Welcome Student 🚀</h2>
-            <p class="text-sm text-gray-500 mb-6">Enter your Gemini API key from Google AI Studio. Stored locally on your device.</p>
+            <p class="text-sm text-gray-500 mb-6">Enter your Gemini API key from Google AI Studio.</p>
             <input type="password" id="api-key-input" class="w-full p-4 border-2 border-gray-100 rounded-2xl mb-4 focus:border-blue-500 outline-none" placeholder="Paste AIzaSy... here">
             <button onclick="saveKey()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg">Start Learning</button>
         </div>
@@ -72,7 +72,7 @@
             <div id="content-display" class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50 min-h-[450px]">
                 <div id="loader" class="hidden flex flex-col items-center justify-center py-24">
                     <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                    <p class="mt-4 text-gray-400 font-medium italic">Gemini 3.1 is fetching your data...</p>
+                    <p class="mt-4 text-gray-400 font-medium italic">Fetching your data...</p>
                 </div>
                 <div id="response-area" class="prose max-w-none text-gray-700 leading-relaxed"></div>
             </div>
@@ -86,7 +86,8 @@
             chapter: ''
         };
 
-        const MODEL = "gemini-3.1-flash-lite-preview";
+        // Standardized Model Alias for 2026 Stable API
+        const MODEL = "gemini-1.5-flash"; 
 
         function showScreen(id) {
             ['setup-screen', 'subject-screen', 'chapter-screen', 'study-screen'].forEach(s => 
@@ -120,7 +121,7 @@
                     localStorage.setItem(cacheKey, text); 
                     return text;
                 }
-                return "The AI returned an empty response. Try refreshing.";
+                return "Empty response from AI.";
             } catch (e) {
                 console.error(e);
                 return `<div class="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 font-medium">⚠️ Error: ${e.message}</div>`;
@@ -137,14 +138,14 @@
             drop.classList.add('hidden');
             load.classList.remove('hidden');
 
-            const res = await callGemini(`List only names of all chapters in CBSE Class 10 ${s}. No numbers, no bolding, no prefixes.`, 'list');
+            const res = await callGemini(`List only the names of all chapters in CBSE Class 10 ${s}. No numbers, no bolding, no prefixes.`, 'list');
             
             if (res.includes("Error:")) {
                 load.innerHTML = res;
                 return;
             }
 
-            // Clean Chapter List logic
+            // Clean Chapter List logic: Removes numbers, dashes, and bolding **
             const chapters = res.split('\n')
                 .map(line => line.trim())
                 .filter(line => line.length > 3) 
@@ -173,7 +174,7 @@
             loader.classList.remove('hidden');
 
             const prompts = {
-                notes: `Generate detailed CBSE Class 10 ${state.subject} notes for ${state.chapter}. Use headings (##) and bullets.`,
+                notes: `Detailed CBSE Class 10 ${state.subject} notes for ${state.chapter}. Use headings (##) and bullets.`,
                 exercise: `5 Important practice questions with solutions for CBSE 10th ${state.subject}, Chapter: ${state.chapter}.`,
                 revision: `10-point revision summary for ${state.subject}: ${state.chapter}.`,
                 'unit-test': `A 20-mark unit test for ${state.chapter} for CBSE 10th ${state.subject}.`
@@ -181,7 +182,7 @@
 
             let md = await callGemini(prompts[tab], tab);
             
-            // Format MD to HTML
+            // Basic MD to HTML cleaning
             area.innerHTML = md
                 .replace(/^## (.*$)/gim, '<h2 class="text-blue-800 font-bold mt-6 mb-2">$1</h2>')
                 .replace(/^\* (.*$)/gim, '<li class="ml-4 list-disc mb-1">$1</li>')
@@ -190,7 +191,7 @@
             loader.classList.add('hidden');
         }
 
-        function resetApp() { if(confirm("Reset all settings?")) { localStorage.clear(); location.reload(); } }
+        function resetApp() { if(confirm("Clear data and Reset?")) { localStorage.clear(); location.reload(); } }
         if(state.key) showScreen('subject-screen');
     </script>
 </body>
