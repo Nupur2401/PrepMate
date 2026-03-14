@@ -23,7 +23,7 @@ async function loadChapters(subject) {
     document.getElementById("chapterInfo").textContent = "Fetching chapters…";
 
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBWCBQUoSfLiWscBO8_LynVyVLPpgv-9nM",
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=YOUR_API_KEY",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -31,7 +31,9 @@ async function loadChapters(subject) {
           contents: [
             {
               parts: [
-                { text: `{ text: `List all CBSE Class 10 ${subject} chapters as plain text, one per line, no extra words.` }` }
+                {
+                  text: `List all CBSE Class 10 ${subject} chapters as plain text, one per line, no extra words.`
+                }
               ]
             }
           ]
@@ -51,10 +53,23 @@ async function loadChapters(subject) {
     // Extract text safely
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
     console.log("Extracted text:", text);
-    const chapters = text.split("\n").map(c => c.replace(/^\d+[\.\)]\s*/, "").replace(/\*\*/g, "")trim()).filter(Boolean);
-    // Drop any intro line that isn’t a chapter
+
+    // Clean up formatting: remove numbering, **bold**, and intro lines
+    const chapters = text
+      .split("\n")
+      .map(c =>
+        c
+          .replace(/^\d+[\.\)]\s*/, "") // remove numbering like "1." or "2)"
+          .replace(/\*\*/g, "")         // remove **bold markers**
+          .trim()
+      )
+      .filter(Boolean);
+
     const filteredChapters = chapters.filter(
-      c => !c.toLowerCase().includes("chapter list") && !c.toLowerCase().includes("here are"));
+      c =>
+        !c.toLowerCase().includes("chapter list") &&
+        !c.toLowerCase().includes("here are")
+    );
 
     if (filteredChapters.length > 0) {
       populateDropdown(filteredChapters);
