@@ -147,22 +147,72 @@ async function fetchSubsections(subject, chapter) {
 }
 
 // Fetch Notes content
-async function fetchNotes() {
-  const subsection = document.getElementById("subsectionDropdown").value;
-  if (!subsection) return;
-  document.getElementById("notesContent").textContent = "Loading notes…";
+async function loadNotes(subject, chapter, subsection) {
+  try {
+    document.getElementById("notesContent").textContent = "Fetching notes…";
 
-  const response = await fetch(GEMINI_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: `Generate CBSE Class 10 notes for Chapter ${currentChapter}, subsection ${subsection}. Keep explanations clear, concise, and student-friendly. Use bullet points.` }] }]
-    })
-  });
-  const data = await response.json();
-  document.getElementById("notesContent").textContent = data.candidates?.[0]?.content?.parts?.[0]?.text || "No notes found.";
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=YOUR_API_KEY",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: `Generate CBSE Class 10 ${subject} notes for Chapter ${chapter}, subsection ${subsection}. Keep explanations clear, concise, and student-friendly. Use bullet points.`
+                }
+              ]
+            }
+          ]
+        })
+      }
+    );
+
+    const data = await response.json();
+    console.log("Gemini raw response:", data);
+
+    if (!response.ok) {
+      document.getElementById("notesContent").textContent =
+        "Gemini error: " + (data.error?.message || "Unknown error");
+      return;
+    }
+
+    // Extract text safely
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    console.log("Extracted notes:", text);
+
+    // Clean up formatting: remove **bold**, numbering, intro lines
+    const notes = text
+      .split("\n")
+      .map(line =>
+        line
+          .replace(/^\d+[\.\)]\s*/, "") // remove numbering
+          .replace(/\*\*/g, "")         // remove bold markers
+          .trim()
+      )
+      .filter(Boolean);
+
+    const filteredNotes = notes.filter(
+      n =>
+        !n.toLowerCase().includes("here are") &&
+        !n.toLowerCase().includes("notes for")
+    );
+
+    if (filteredNotes.length > 0) {
+      document.getElementById("notesContent").innerHTML =
+        "<ul>" + filteredNotes.map(n => `<li>${n}</li>`).join("") + "</ul>";
+    } else {
+      document.getElementById("notesContent").textContent =
+        "No notes returned from Gemini.";
+    }
+  } catch (error) {
+    console.error("Frontend error:", error);
+    document.getElementById("notesContent").textContent =
+      "Error fetching notes.";
+  }
 }
-
 // More Explanation
 async function fetchMoreExplanation() {
   const subsection = document.getElementById("subsectionDropdown").value;
