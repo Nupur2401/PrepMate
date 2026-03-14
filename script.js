@@ -4,7 +4,9 @@ function toggleMenu() {
 }
 
 function goHome() {
-  alert("Returning to Home Screen");
+  document.getElementById("subject-selection").style.display = "block";
+  document.getElementById("chapter-selection").style.display = "none";
+  document.getElementById("messageBox").textContent = "Welcome back to Home!";
 }
 
 function selectSubject(subject) {
@@ -12,15 +14,34 @@ function selectSubject(subject) {
   document.getElementById("subject-selection").style.display = "none";
   document.getElementById("chapter-selection").style.display = "block";
 
-  // Show default chapters for now
-  let chapters = [];
-  if (subject === "Maths") {
-    chapters = ["Real Numbers", "Polynomials", "Pair of Linear Equations", "Triangles"];
-  } else if (subject === "Science") {
-    chapters = ["Chemical Reactions", "Acids Bases Salts", "Metals and Non-Metals", "Life Processes"];
-  }
+  // Call backend to get chapters
+  loadChapters(subject);
+}
 
-  populateDropdown(chapters);
+async function loadChapters(subject) {
+  try {
+    const response = await fetch("http://localhost:3000/gemini", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prompt: `List CBSE Class 10 ${subject} chapters`
+      })
+    });
+
+    const data = await response.json();
+    console.log("Gemini response:", data);
+
+    if (data.chapters) {
+      populateDropdown(data.chapters);
+    } else {
+      document.getElementById("chapterInfo").textContent =
+        "No chapters returned from Gemini.";
+    }
+  } catch (error) {
+    console.error("Frontend error:", error);
+    document.getElementById("chapterInfo").textContent =
+      "Error fetching chapters.";
+  }
 }
 
 function populateDropdown(chapters) {
