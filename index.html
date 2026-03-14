@@ -1,94 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PrepMate</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrepMate - CBSE 10th Prep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hidden { display: none; }
+        .active-tab { border-bottom: 4px solid #2563eb; color: #2563eb; }
+        .prose { line-height: 1.6; }
+    </style>
 </head>
-<body>
-  <!-- Header -->
-  <header>
-    <h1>PrepMate</h1>
-    <nav>
-      <button onclick="toggleMenu()">☰ Menu</button>
-      <div id="menu" class="menu-panel" style="display:none;">
-        <button onclick="goHome()">🏠 Home</button>
-      </div>
-    </nav>
-  </header>
+<body class="bg-slate-50 text-gray-800 min-h-screen">
 
-  <!-- Screen 1: Subject Selection -->
-  <main id="subject-selection">
-    <h2>Select Subject</h2>
-    <button onclick="selectSubject('Maths')">Maths</button>
-    <button onclick="selectSubject('Science')">Science</button>
-  </main>
-  
-  <!-- Screen 2: Chapter Selection -->
-  <section id="chapter-selection" style="display:none;">
-    <h2>Select Chapter</h2>
-    <select id="chapterDropdown" onchange="fetchChapterInfo()">
-      <option value="">-- Choose a Chapter --</option>
-    </select>
-    <br><br>
-    <div id="chapterInfo" class="content-box"></div>
-    <button onclick="goHome()">⬅ Back to Subjects</button>
-  </section>
+    <header class="bg-white shadow-md p-4 sticky top-0 z-50 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="bg-blue-600 text-white p-2 rounded-lg font-bold">PM</div>
+            <span class="text-xl font-extrabold text-blue-900">PrepMate</span>
+        </div>
+        <button onclick="resetApp()" class="text-xs text-gray-400 hover:text-red-500">Reset App</button>
+    </header>
 
-  <!-- Screen 3: Study Mode -->
-  <section id="study-mode" style="display:none;">
-    <h2 id="chapterTitle"></h2>
+    <main class="max-w-3xl mx-auto p-4 pb-24">
+        
+        <div id="setup-screen" class="bg-white p-8 rounded-2xl shadow-xl mt-10">
+            <h2 class="text-2xl font-bold mb-4">Welcome to PrepMate! 🎓</h2>
+            <p class="mb-6 text-gray-600">Please enter your Google Gemini API Key to begin generating dynamic study materials.</p>
+            <input type="password" id="api-key-input" class="w-full p-3 border-2 border-gray-200 rounded-xl mb-4 focus:border-blue-500 outline-none" placeholder="Enter Gemini API Key">
+            <button onclick="saveKey()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition">Start Learning</button>
+        </div>
 
-    <!-- Tabs -->
-    <div class="tab-bar">
-      <button onclick="showTab('notes')">Notes</button>
-      <button onclick="showTab('exercise')">Exercise</button>
-      <button onclick="showTab('revision')">Revision</button>
-      <button onclick="showTab('unitTest')">Unit Test</button>
-    </div>
+        <div id="subject-screen" class="hidden text-center py-10">
+            <h2 class="text-3xl font-bold mb-8 text-blue-950">Select Subject</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <button onclick="selectSubject('Maths')" class="group p-10 bg-white border-2 border-transparent hover:border-blue-500 rounded-3xl shadow-md transition-all">
+                    <div class="text-6xl mb-4 group-hover:scale-110 transition">🔢</div>
+                    <div class="text-2xl font-bold">Maths</div>
+                </button>
+                <button onclick="selectSubject('Science')" class="group p-10 bg-white border-2 border-transparent hover:border-blue-500 rounded-3xl shadow-md transition-all">
+                    <div class="text-6xl mb-4 group-hover:scale-110 transition">🧪</div>
+                    <div class="text-2xl font-bold">Science</div>
+                </button>
+            </div>
+        </div>
 
-    <!-- Notes Tab -->
-    <div id="notesTab" class="tab-content" style="display:none;">
-      <h3>Notes</h3>
-      <select id="subsectionDropdown" onchange="fetchNotes()">
-        <option value="">-- Choose a Subsection --</option>
-      </select>
-      <div id="notesContent" class="content-box"></div>
-      <button onclick="fetchMoreExplanation()">More Explanation</button>
-      <button onclick="fetchVideo()">Watch Video</button>
-    </div>
+        <div id="chapter-screen" class="hidden">
+            <button onclick="showScreen('subject-screen')" class="mb-6 text-blue-600 font-medium">← Change Subject</button>
+            <h2 class="text-2xl font-bold mb-6">Select Chapter</h2>
+            <div id="chapter-loader" class="animate-pulse text-gray-400 mb-4 hidden">Fetching syllabus...</div>
+            <select id="chapter-dropdown" class="w-full p-4 bg-white border-2 border-gray-100 rounded-2xl shadow-sm mb-8 text-lg outline-none focus:ring-2 ring-blue-500"></select>
+            <div class="flex gap-4">
+                <button onclick="initMode('Study')" class="flex-1 bg-green-500 text-white py-5 rounded-2xl font-bold text-xl shadow-lg hover:bg-green-600">Study Mode</button>
+                <button onclick="initMode('Test')" class="flex-1 bg-orange-500 text-white py-5 rounded-2xl font-bold text-xl shadow-lg hover:bg-orange-600">Test Mode</button>
+            </div>
+        </div>
 
-    <!-- Exercise Tab -->
-    <div id="exerciseTab" class="tab-content" style="display:none;">
-      <h3>Exercises</h3>
-      <select id="exerciseDropdown" onchange="fetchExerciseQuestions()">
-        <option value="">-- Choose an Exercise --</option>
-      </select>
-      <div id="exerciseQuestions" class="content-box"></div>
-    </div>
+        <div id="study-screen" class="hidden">
+            <button onclick="showScreen('chapter-screen')" class="mb-4 text-blue-600 font-medium">← Back to Chapters</button>
+            <h3 id="study-title" class="text-xl font-bold text-blue-900 mb-6 italic underline underline-offset-4"></h3>
+            
+            <div class="flex border-b border-gray-200 mb-6 overflow-x-auto whitespace-nowrap">
+                <button onclick="loadContent('notes')" id="tab-notes" class="px-6 py-3 font-bold border-b-4 border-transparent">Notes</button>
+                <button onclick="loadContent('exercise')" id="tab-exercise" class="px-6 py-3 font-bold border-b-4 border-transparent">Exercise</button>
+                <button onclick="loadContent('revision')" id="tab-revision" class="px-6 py-3 font-bold border-b-4 border-transparent">Revision</button>
+                <button onclick="loadContent('unit-test')" id="tab-unit-test" class="px-6 py-3 font-bold border-b-4 border-transparent">Unit Test</button>
+            </div>
 
-    <!-- Revision Tab -->
-    <div id="revisionTab" class="tab-content" style="display:none;">
-      <h3>Revision Notes</h3>
-      <div id="revisionContent" class="content-box"></div>
-    </div>
+            <div id="content-display" class="bg-white p-6 rounded-2xl shadow-inner min-h-[400px] border border-gray-100">
+                <div id="ai-loading" class="hidden flex flex-col items-center justify-center pt-20">
+                    <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                    <p class="mt-4 text-gray-500 font-medium">AI is generating your material...</p>
+                </div>
+                <div id="ai-response" class="prose max-w-none text-lg"></div>
+            </div>
+        </div>
 
-    <!-- Unit Test Tab -->
-    <div id="unitTestTab" class="tab-content" style="display:none;">
-      <h3>Unit Test</h3>
-      <button onclick="generateUnitTest()">Start Test</button>
-      <div id="unitTestContent" class="content-box"></div>
-    </div>
+    </main>
 
-    <button onclick="backToChapters()">⬅ Back to Chapters</button>
-  </section>  
-  
-  <!-- Footer -->
-  <footer>
-    <p>PrepMate v1.0 (MVP)</p>
-  </footer>
+    <footer id="app-footer" class="fixed bottom-0 w-full bg-white border-t p-4 hidden">
+        <div class="max-w-3xl mx-auto">
+            <div class="flex justify-between text-xs font-bold mb-1">
+                <span>COURSE PROGRESS</span>
+                <span id="progress-percent">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 h-3 rounded-full overflow-hidden">
+                <div id="progress-bar" class="bg-blue-600 h-full transition-all duration-1000" style="width: 0%"></div>
+            </div>
+        </div>
+    </footer>
 
-  <script src="script.js"></script>
+    <script>
+        let state = {
+            key: localStorage.getItem('pm_gemini_key'),
+            subject: '',
+            chapter: '',
+            mode: ''
+        };
+
+        const screens = ['setup-screen', 'subject-screen', 'chapter-screen', 'study-screen'];
+
+        function showScreen(id) {
+            screens.forEach(s => document.getElementById(s).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            if (id !== 'setup-screen') document.getElementById('app-footer').classList.remove('hidden');
+        }
+
+        function saveKey() {
+            const val = document.getElementById('api-key-input').value;
+            if(val) {
+                localStorage.setItem('pm_gemini_key', val);
+                state.key = val;
+                showScreen('subject-screen');
+            }
+        }
+
+        // Gemini API Integration [cite: 120, 132]
+        async function callGemini(prompt) {
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${state.key}`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (e) {
+                return "Error: Check your API key or connection. [cite: 249]";
+            }
+        }
+
+        async function selectSubject(sub) {
+            state.subject = sub;
+            showScreen('chapter-screen');
+            const dropdown = document.getElementById('chapter-dropdown');
+            const loader = document.getElementById('chapter-loader');
+            
+            dropdown.innerHTML = "";
+            loader.classList.remove('hidden');
+
+            // Prompt from LLD [cite: 162]
+            const prompt = `List all chapters in CBSE Class 10 ${sub} curriculum. Provide the output as a simple numbered list of chapter names only, without explanations.`;
+            const result = await callGemini(prompt);
+            
+            const chapters = result.split('\n').filter(line => line.trim().length > 3);
+            dropdown.innerHTML = chapters.map(ch => `<option value="${ch}">${ch}</option>`).join('');
+            loader.classList.add('hidden');
+        }
+
+        function initMode(mode) {
+            state.mode = mode;
+            state.chapter = document.getElementById('chapter-dropdown').value;
+            document.getElementById('study-title').innerText = `${state.subject} > ${state.chapter}`;
+            showScreen('study-screen');
+            loadContent('notes');
+        }
+
+        async function loadContent(tab) {
+            // Tab styling
+            document.querySelectorAll('#study-screen button[id^="tab-"]').forEach(btn => btn.className = "px-6 py-3 font-bold border-b-4 border-transparent");
+            document.getElementById('tab-' + tab).className = "px-6 py-3 font-bold border-b-4 active-tab";
+
+            const display = document.getElementById('ai-response');
+            const loader = document.getElementById('ai-loading');
+            display.innerHTML = "";
+            loader.classList.remove('hidden');
+
+            let prompt = "";
+            // Using prompts from LLD [cite: 174, 189, 200, 208]
+            if(tab === 'notes') prompt = `Generate CBSE Class 10 ${state.subject} notes for ${state.chapter}. Use bullet points. [cite: 174-175]`;
+            if(tab === 'exercise') prompt = `Generate questions from CBSE Class 10 ${state.subject}, ${state.chapter} based on NCERT. [cite: 189-190]`;
+            if(tab === 'revision') prompt = `Generate concise revision notes for CBSE Class 10 ${state.subject}, ${state.chapter}. Limit to 10 points. [cite: 200-201]`;
+            if(tab === 'unit-test') prompt = `Generate a 10-question unit test for CBSE Class 10 ${state.subject}, ${state.chapter} with mixed difficulty. [cite: 208-209]`;
+
+            const response = await callGemini(prompt);
+            loader.classList.add('hidden');
+            display.innerHTML = response.replace(/\n/g, '<br>');
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let prog = parseInt(localStorage.getItem('user_prog') || 0);
+            prog = Math.min(prog + 7, 100); // Simulated progress [cite: 118]
+            localStorage.setItem('user_prog', prog);
+            document.getElementById('progress-bar').style.width = prog + '%';
+            document.getElementById('progress-percent').innerText = prog + '%';
+        }
+
+        function resetApp() {
+            localStorage.clear();
+            location.reload();
+        }
+
+        // Initialize [cite: 98]
+        if(state.key) showScreen('subject-screen');
+    </script>
 </body>
 </html>
