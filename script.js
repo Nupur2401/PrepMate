@@ -50,10 +50,14 @@ async function loadChapters(subject) {
 
     // Extract text safely
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    const chapters = text.split("\n").map(c => c.trim()).filter(Boolean);
+    console.log("Extracted text:", text);
+    const chapters = text.split("\n").map(c => c.replace(/^\d+[\.\)]\s*/, "").replace(/\*\*/g, "")trim()).filter(Boolean);
+    // Drop any intro line that isn’t a chapter
+    const filteredChapters = chapters.filter(
+      c => !c.toLowerCase().includes("chapter list") && !c.toLowerCase().includes("here are"));
 
-    if (chapters.length > 0) {
-      populateDropdown(chapters);
+    if (filteredChapters.length > 0) {
+      populateDropdown(filteredChapters);
       document.getElementById("chapterInfo").textContent = "";
     } else {
       document.getElementById("chapterInfo").textContent =
