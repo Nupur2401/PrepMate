@@ -116,45 +116,113 @@ function fetchChapterInfo() {
   loadChapterDetails(chapter);
 }
 
-async function loadChapterDetails(chapter) {
-  try {
-    document.getElementById("chapterContent").textContent = "Loading details…";
+function showTab(tabName) {
+  // Hide all tabs
+  document.querySelectorAll(".tab-content").forEach(tab => tab.style.display = "none");
+  // Show selected tab
+  document.getElementById(tabName + "Tab").style.display = "block";
+}
 
-    const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBGvHRZLRZk-7qVu25e_mGD_5EpyXBIndI",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: `Give a clear, student-friendly summary of the CBSE Class 10 chapter "${chapter}". Include key concepts and formulas if relevant.`
-                }
-              ]
-            }
-          ]
-        })
-      }
-    );
+// Fetch subsections for Notes tab
+async function fetchSubsections(subject, chapter) {
+  const response = await fetch(GEMINI_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: `List the subsections or main topics covered in CBSE Class 10 ${subject}, Chapter ${chapter}. Provide only a numbered list of subsection titles.` }] }]
+    })
+  });
+  const data = await response.json();
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+  const subsections = text.split("\n").map(s => s.replace(/^\d+[\.\)]\s*/, "").trim()).filter(Boolean);
 
-    const data = await response.json();
-    console.log("Gemini chapter details:", data);
+  const dropdown = document.getElementById("subsectionDropdown");
+  dropdown.innerHTML = '<option value="">-- Choose a Subsection --</option>';
+  subsections.forEach(sub => {
+    const option = document.createElement("option");
+    option.value = sub;
+    option.textContent = sub;
+    dropdown.appendChild(option);
+  });
+}
 
-    if (!response.ok) {
-      document.getElementById("chapterContent").textContent =
-        "Gemini error: " + (data.error?.message || "Unknown error");
-      return;
-    }
+// Fetch Notes content
+async function fetchNotes() {
+  const subsection = document.getElementById("subsectionDropdown").value;
+  if (!subsection) return;
+  document.getElementById("notesContent").textContent = "Loading notes…";
 
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    document.getElementById("chapterContent").textContent = text;
-  } catch (error) {
-    console.error("Frontend error:", error);
-    document.getElementById("chapterContent").textContent =
-      "Error fetching chapter details.";
-  }
+  const response = await fetch(GEMINI_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: `Generate CBSE Class 10 notes for Chapter ${currentChapter}, subsection ${subsection}. Keep explanations clear, concise, and student-friendly. Use bullet points.` }] }]
+    })
+  });
+  const data = await response.json();
+  document.getElementById("notesContent").textContent = data.candidates?.[0]?.content?.parts?.[0]?.text || "No notes found.";
+}
+
+// More Explanation
+async function fetchMoreExplanation() {
+  const subsection = document.getElementById("subsectionDropdown").value;
+  if (!subsection) return;
+  document.getElementById("notesContent").textContent = "Loading explanation…";
+
+  const response = await fetch(GEMINI_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: `Expand on CBSE Class 10 Chapter ${currentChapter}, subsection ${subsection}. Provide deeper explanation with examples and analogies.` }] }]
+    })
+  });
+  const data = await response.json();
+  document.getElementById("notesContent").textContent = data.candidates?.[0]?.content?.parts?.[0]?.text || "No explanation found.";
+}
+
+// Watch Video
+async function fetchVideo() {
+  const subsection = document.getElementById("subsectionDropdown").value;
+  if (!subsection) return;
+  document.getElementById("notesContent").textContent = "Searching video…";
+
+  const response = await fetch(GEMINI_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: `Suggest a YouTube video link that explains CBSE Class 10 Chapter ${currentChapter}, subsection ${subsection}. Ensure the video is educational and relevant.` }] }]
+    })
+  });
+  const data = await response.json();
+  document.getElementById("notesContent").textContent = data.candidates?.[0]?.content?.parts?.[0]?.text || "No video found.";
+}
+
+// Revision Notes
+async function fetchRevisionNotes() {
+  document.getElementById("revisionContent").textContent = "Loading revision notes…";
+  const response = await fetch(GEMINI_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: `Generate concise revision notes for CBSE Class 10 Chapter ${currentChapter}. Focus on key formulas, definitions, and important concepts. Limit to 8–10 bullet points.` }] }]
+    })
+  });
+  const data = await response.json();
+  document.getElementById("revisionContent").textContent = data.candidates?.[0]?.content?.parts?.[0]?.text || "No revision notes found.";
+}
+
+// Unit Test
+async function generateUnitTest() {
+  document.getElementById("unitTestContent").textContent = "Generating test…";
+  const response = await fetch(GEMINI_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: `Generate a unit test for CBSE Class 10 Chapter ${currentChapter}. Include 20 questions of mixed difficulty (MCQs, short answers, long answers). Provide answers at the end.` }] }]
+    })
+  });
+  const data = await response.json();
+  document.getElementById("unitTestContent").textContent = data.candidates?.[0]?.content?.parts?.[0]?.text || "No test generated.";
 }
 
 function backToChapters() {
