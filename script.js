@@ -21,19 +21,33 @@ function selectSubject(subject) {
 async function loadChapters(subject) {
   try {
     document.getElementById("chapterInfo").textContent = "Fetching chapters…";
-    const response = await fetch("http://localhost:3000/gemini", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        prompt: `List CBSE Class 10 ${subject} chapters`
-      })
-    });
+
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=YOUR_API_KEY",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                { text: `List CBSE Class 10 ${subject} chapters` }
+              ]
+            }
+          ]
+        })
+      }
+    );
 
     const data = await response.json();
-    console.log("Gemini response:", data);
+    console.log("Gemini raw response:", data);
 
-    if (data.chapters && data.chapters.length > 0) {
-      populateDropdown(data.chapters);
+    // Extract text
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    const chapters = text.split("\n").map(c => c.trim()).filter(Boolean);
+
+    if (chapters.length > 0) {
+      populateDropdown(chapters);
       document.getElementById("chapterInfo").textContent = "";
     } else {
       document.getElementById("chapterInfo").textContent =
@@ -45,7 +59,6 @@ async function loadChapters(subject) {
       "Error fetching chapters.";
   }
 }
-
 function populateDropdown(chapters) {
   const dropdown = document.getElementById("chapterDropdown");
   dropdown.innerHTML = '<option value="">-- Choose a Chapter --</option>';
