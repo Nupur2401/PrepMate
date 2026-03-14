@@ -13,7 +13,7 @@
     <nav>
       <button onclick="toggleMenu()">☰ Menu</button>
       <div id="menu" class="menu-panel" style="display:none;">
-        <button onclick="goHome()">🏠 Home (Screen 1)</button>
+        <button onclick="goHome()">🏠 Home</button>
       </div>
     </nav>
   </header>
@@ -25,18 +25,6 @@
     <button onclick="selectSubject('Science')">Science</button>
   </main>
 
-  <!-- Screen 2: Chapter Selection -->
-  <section id="chapter-selection" style="display:none;">
-    <h2>Select Chapter</h2>
-    <select id="chapterDropdown" onchange="fetchChapterInfo()">
-      <option value="">-- Choose a Chapter --</option>
-    </select>
-    <br><br>
-    <div id="chapterInfo" class="content-box"></div>
-    <button onclick="goToStudyMode()">Study</button>
-    <button onclick="goToTestMode()">Test</button>
-  </section>
-
   <!-- Footer -->
   <footer>
     <p>PrepMate v1.0 (MVP)</p>
@@ -45,6 +33,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
-
-
