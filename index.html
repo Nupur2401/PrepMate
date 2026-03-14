@@ -3,185 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrepMate - CBSE 10th Prep</title>
+    <title>PrepMate - CBSE 10th</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .hidden { display: none; }
-        .active-tab { border-bottom: 4px solid #2563eb; color: #2563eb; font-weight: bold; }
-        .prose h2 { font-size: 1.25rem; font-weight: bold; margin-top: 1.5rem; color: #1e3a8a; }
+        .active-tab { border-bottom: 4px solid #2563eb; color: #2563eb; font-weight: 800; }
+        .prose h2 { font-size: 1.3rem; font-weight: bold; margin-top: 1.5rem; color: #1e3a8a; }
         .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
-        .prose li { margin-bottom: 0.5rem; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="bg-slate-50 text-gray-800 min-h-screen font-sans">
+<body class="bg-slate-50 text-gray-800 min-h-screen">
 
     <header class="bg-white shadow-sm p-4 sticky top-0 z-50 flex justify-between items-center">
         <div class="flex items-center gap-2">
             <div class="bg-blue-600 text-white px-2 py-1 rounded font-bold">PM</div>
-            <span class="text-xl font-bold text-blue-900 tracking-tight">PrepMate</span>
+            <span class="text-xl font-bold text-blue-900">PrepMate</span>
         </div>
-        <button onclick="resetApp()" class="text-xs text-red-400 hover:text-red-600">Reset Setup</button>
+        <button onclick="resetApp()" class="text-xs text-red-400 font-bold uppercase tracking-widest">Reset</button>
     </header>
 
     <main class="max-w-3xl mx-auto p-4 pb-24">
         
-        <div id="setup-screen" class="bg-white p-8 rounded-2xl shadow-xl mt-10 border border-blue-50">
-            <h2 class="text-2xl font-bold mb-4 text-blue-900">Welcome, Student! 🎓</h2>
-            <p class="text-sm text-gray-500 mb-6">Enter your Gemini API Key from Google AI Studio to begin. Your key is stored locally in your browser for security.</p>
-            <input type="password" id="api-key-input" class="w-full p-4 border-2 border-gray-100 rounded-xl mb-4 focus:border-blue-500 outline-none transition-all" placeholder="Paste AIzaSy... key here">
-            <button onclick="saveKey()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition-all">Start Preparing</button>
+        <div id="setup-screen" class="bg-white p-8 rounded-3xl shadow-xl mt-10 border border-blue-50">
+            <h2 class="text-2xl font-bold mb-4 text-blue-900">Connect Gemini API</h2>
+            <p class="text-sm text-gray-500 mb-6">Enter your API key to enable dynamic CBSE 10th content. Key is saved locally.</p>
+            <input type="password" id="api-key-input" class="w-full p-4 border-2 border-gray-100 rounded-2xl mb-4 focus:border-blue-500 outline-none" placeholder="AIzaSy...">
+            <button onclick="saveKey()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-blue-700 transition-all">Launch PrepMate</button>
         </div>
 
         <div id="subject-screen" class="hidden text-center py-10">
-            <h2 class="text-3xl font-extrabold mb-8 text-blue-950">Select Subject</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <button onclick="selectSubject('Maths')" class="group p-10 bg-white border-2 border-transparent hover:border-blue-500 rounded-3xl shadow-md transition-all">
-                    <div class="text-6xl mb-4 group-hover:scale-110 transition">🔢</div>
-                    <div class="text-2xl font-bold">Mathematics</div>
+            <h2 class="text-2xl font-black mb-8 text-gray-800 uppercase tracking-tight">Select Subject</h2>
+            <div class="grid grid-cols-2 gap-6">
+                <button onclick="selectSubject('Maths')" class="p-10 bg-white border-2 border-transparent hover:border-blue-500 rounded-3xl shadow-sm transition-all group">
+                    <span class="text-5xl block mb-4 group-hover:scale-110 transition">🔢</span>
+                    <span class="font-bold text-lg">Maths</span>
                 </button>
-                <button onclick="selectSubject('Science')" class="group p-10 bg-white border-2 border-transparent hover:border-blue-500 rounded-3xl shadow-md transition-all">
-                    <div class="text-6xl mb-4 group-hover:scale-110 transition">🧪</div>
-                    <div class="text-2xl font-bold">Science</div>
+                <button onclick="selectSubject('Science')" class="p-10 bg-white border-2 border-transparent hover:border-blue-500 rounded-3xl shadow-sm transition-all group">
+                    <span class="text-5xl block mb-4 group-hover:scale-110 transition">🧪</span>
+                    <span class="font-bold text-lg">Science</span>
                 </button>
             </div>
         </div>
 
         <div id="chapter-screen" class="hidden">
-            <button onclick="showScreen('subject-screen')" class="text-blue-600 mb-4 text-sm font-bold flex items-center">← Change Subject</button>
-            <h2 id="sub-heading" class="text-2xl font-bold mb-6 text-blue-900">Chapters</h2>
-            <div id="chap-loading" class="hidden animate-pulse py-4 text-blue-500 italic">Consulting CBSE Syllabus...</div>
-            <select id="chapter-dropdown" class="w-full p-4 bg-white border-2 border-gray-100 rounded-xl mb-8 shadow-sm outline-none focus:ring-2 ring-blue-400"></select>
+            <button onclick="showScreen('subject-screen')" class="text-blue-600 mb-4 text-sm font-bold flex items-center">← Subjects</button>
+            <h2 id="sub-heading" class="text-2xl font-bold mb-6"></h2>
+            <div id="chap-loading" class="hidden animate-pulse py-4 text-blue-500 italic">Fetching CBSE Chapters...</div>
+            <select id="chapter-dropdown" class="w-full p-4 bg-white border-2 border-gray-100 rounded-2xl mb-8 shadow-sm outline-none"></select>
             <div class="flex gap-4">
-                <button onclick="initMode('Study')" class="flex-1 bg-green-500 text-white py-5 rounded-2xl font-bold text-lg shadow-md hover:bg-green-600 transition">Study Mode</button>
-                <button onclick="initMode('Test')" class="flex-1 bg-orange-500 text-white py-5 rounded-2xl font-bold text-lg shadow-md hover:bg-orange-600 transition">Test Mode</button>
+                <button onclick="initMode('Study')" class="flex-1 bg-green-500 text-white py-4 rounded-2xl font-bold text-lg shadow-md">Study Mode</button>
+                <button onclick="initMode('Test')" class="flex-1 bg-orange-500 text-white py-4 rounded-2xl font-bold text-lg shadow-md">Test Mode</button>
             </div>
         </div>
 
         <div id="study-screen" class="hidden">
-            <div class="flex items-center justify-between mb-6">
-                <button onclick="showScreen('chapter-screen')" class="text-blue-600 text-sm font-bold">← Chapters</button>
-                <span id="current-info" class="text-xs font-black text-gray-300 uppercase tracking-widest"></span>
+            <div class="flex items-center justify-between mb-4">
+                <button onclick="showScreen('chapter-screen')" class="text-blue-600 text-sm font-bold">← Back</button>
+                <span id="current-info" class="text-xs font-bold text-gray-400 uppercase"></span>
             </div>
             
             <nav class="flex border-b border-gray-100 mb-6 overflow-x-auto no-scrollbar">
-                <button onclick="loadContent('notes')" id="tab-notes" class="px-5 py-2 text-gray-400 whitespace-nowrap">Notes</button>
-                <button onclick="loadContent('exercise')" id="tab-exercise" class="px-5 py-2 text-gray-400 whitespace-nowrap">Exercise</button>
-                <button onclick="loadContent('revision')" id="tab-revision" class="px-5 py-2 text-gray-400 whitespace-nowrap">Revision</button>
-                <button onclick="loadContent('unit-test')" id="tab-unit-test" class="px-5 py-2 text-gray-400 whitespace-nowrap">Unit Test</button>
+                <button onclick="loadContent('notes')" id="tab-notes" class="px-6 py-2 text-gray-400 whitespace-nowrap font-bold">Notes</button>
+                <button onclick="loadContent('exercise')" id="tab-exercise" class="px-6 py-2 text-gray-400 whitespace-nowrap font-bold">Exercise</button>
+                <button onclick="loadContent('revision')" id="tab-revision" class="px-6 py-2 text-gray-400 whitespace-nowrap font-bold">Revision</button>
+                <button onclick="loadContent('unit-test')" id="tab-unit-test" class="px-6 py-2 text-gray-400 whitespace-nowrap font-bold">Unit Test</button>
             </nav>
 
-            <div id="content-container" class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50 min-h-[450px]">
-                <div id="loader" class="hidden flex flex-col items-center justify-center py-24">
+            <div id="content-display" class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50 min-h-[400px]">
+                <div id="loader" class="hidden flex flex-col items-center justify-center py-20">
                     <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                    <p class="mt-4 text-gray-400 font-medium">Gemini is preparing your material...</p>
+                    <p class="mt-4 text-gray-400 font-medium italic">Gemini is thinking...</p>
                 </div>
                 <div id="response-area" class="prose max-w-none text-gray-700"></div>
             </div>
         </div>
     </main>
 
-    <footer id="app-footer" class="fixed bottom-0 w-full bg-white border-t p-4 hidden">
-        <div class="max-w-3xl mx-auto flex items-center gap-4">
-            <span class="text-[10px] font-black text-gray-400 uppercase">Progress</span>
-            <div class="flex-1 bg-gray-100 h-2 rounded-full overflow-hidden">
-                <div id="progress-bar" class="bg-blue-600 h-full transition-all duration-700" style="width: 0%"></div>
-            </div>
-        </div>
-    </footer>
-
     <script>
-        /**
-         * APP STATE & CONFIG
-         */
-        let app = {
+        let state = {
             key: localStorage.getItem('pm_key'),
             subject: '',
             chapter: ''
         };
 
-        const screens = ['setup-screen', 'subject-screen', 'chapter-screen', 'study-screen'];
-
+        // UI Helpers
         function showScreen(id) {
-            screens.forEach(s => document.getElementById(s).classList.add('hidden'));
+            ['setup-screen', 'subject-screen', 'chapter-screen', 'study-screen'].forEach(s => 
+                document.getElementById(s).classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
-            if(id !== 'setup-screen') document.getElementById('app-footer').classList.remove('hidden');
         }
 
         function saveKey() {
-            const input = document.getElementById('api-key-input').value;
-            if(input) {
-                localStorage.setItem('pm_key', input);
-                app.key = input;
-                showScreen('subject-screen');
-            }
+            const val = document.getElementById('api-key-input').value;
+            if(val) { localStorage.setItem('pm_key', val); state.key = val; showScreen('subject-screen'); }
         }
 
-        /**
-         * GEMINI API + CACHING ENGINE
-         */
-        async function askGemini(prompt, tabName) {
-            // Check LocalStorage Cache first
-            const cacheKey = `cache_${app.subject}_${app.chapter}_${tabName}`.replace(/\s+/g, '_').toLowerCase();
+        // FIXED API Engine with Local Storage Caching
+        async function callGemini(prompt, tabName) {
+            const cacheKey = `cache_${state.subject}_${state.chapter}_${tabName}`.replace(/\s+/g, '_').toLowerCase();
             const cached = localStorage.getItem(cacheKey);
             if(cached) return cached;
 
             try {
-                // Correct REST endpoint for Gemini 1.5 Flash
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${app.key}`;
+                // UPDATE: Using the stable 2026 model gemini-2.0-flash
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${state.key}`;
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                 });
 
-                if (!response.ok) {
-                    const err = await response.json();
-                    throw new Error(err.error?.message || "Connection Error");
-                }
+                if (!response.ok) throw new Error("API Connection Failed");
 
                 const data = await response.json();
                 const text = data.candidates[0].content.parts[0].text;
-                
-                // Save to Cache
-                localStorage.setItem(cacheKey, text);
+                localStorage.setItem(cacheKey, text); // Save to cache
                 return text;
             } catch (e) {
-                return `<div class="p-4 bg-red-50 text-red-600 rounded-xl"><b>Error:</b> ${e.message}</div>`;
+                return `Content not available, please try again.`;
             }
         }
 
-        /**
-         * NAVIGATION & LOGIC
-         */
         async function selectSubject(s) {
-            app.subject = s;
+            state.subject = s;
             document.getElementById('sub-heading').innerText = s + " Chapters";
             showScreen('chapter-screen');
             
-            const dropdown = document.getElementById('chapter-dropdown');
-            const loader = document.getElementById('chap-loading');
-            dropdown.classList.add('hidden');
-            loader.classList.remove('hidden');
+            const drop = document.getElementById('chapter-dropdown');
+            const load = document.getElementById('chap-loading');
+            drop.classList.add('hidden');
+            load.classList.remove('hidden');
 
-            const res = await askGemini(`List all chapters in CBSE Class 10 ${s} curriculum. Provide the output as a simple list of chapter names only.`, 'list');
-            const chapters = res.split('\n').filter(l => l.trim().length > 2);
-            dropdown.innerHTML = chapters.map(c => `<option value="${c.replace(/^\d+\.\s*/, '')}">${c}</option>`).join('');
+            const res = await callGemini(`List all chapters in CBSE Class 10 ${s} curriculum. List names only.`, 'list');
+            const chapters = res.split('\n').filter(l => l.trim().length > 3);
+            drop.innerHTML = chapters.map(c => `<option value="${c.replace(/^\d+\.\s*/, '')}">${c}</option>`).join('');
             
-            loader.classList.add('hidden');
-            dropdown.classList.remove('hidden');
+            load.classList.add('hidden');
+            drop.classList.remove('hidden');
         }
 
         function initMode(m) {
-            app.chapter = document.getElementById('chapter-dropdown').value;
-            document.getElementById('current-info').innerText = `${app.subject} • ${app.chapter}`;
+            state.chapter = document.getElementById('chapter-dropdown').value;
+            document.getElementById('current-info').innerText = `${state.subject} • ${state.chapter}`;
             showScreen('study-screen');
             loadContent('notes');
         }
 
         async function loadContent(tab) {
-            // UI Tab Styling
-            document.querySelectorAll('nav button').forEach(b => b.className = "px-5 py-2 text-gray-400 whitespace-nowrap");
-            document.getElementById('tab-' + tab).className = "px-5 py-2 active-tab whitespace-nowrap";
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-tab'));
+            document.getElementById('tab-' + tab).classList.add('active-tab');
 
             const area = document.getElementById('response-area');
             const loader = document.getElementById('loader');
@@ -189,35 +160,25 @@
             loader.classList.remove('hidden');
 
             const prompts = {
-                notes: `Generate detailed CBSE 10th ${app.subject} notes for ${app.chapter}. Use ## for headers and * for bullets.`,
-                exercise: `Generate 5 practice questions for CBSE 10th ${app.subject} chapter ${app.chapter}.`,
-                revision: `Generate a 10-point quick revision summary for ${app.subject}: ${app.chapter}.`,
-                'unit-test': `Generate a 20-mark unit test for CBSE 10th ${app.subject} chapter ${app.chapter}.`
+                notes: `Generate detailed CBSE Class 10 ${state.subject} notes for ${state.chapter}. Use headings (##) and bullets.`,
+                exercise: `Generate 5 practice questions for CBSE Class 10 ${state.subject}, Chapter: ${state.chapter}.`,
+                revision: `Generate a 10-point revision summary for ${state.subject}: ${state.chapter}.`,
+                'unit-test': `Generate a unit test for ${state.chapter} for CBSE 10th ${state.subject}.`
             };
 
-            let md = await askGemini(prompts[tab], tab);
+            let md = await callGemini(prompts[tab], tab);
             
-            // Basic Markdown conversion for Browser display
+            // Format Markdown for rendering
             area.innerHTML = md
-                .replace(/^## (.*$)/gim, '<h2 class="text-blue-800 font-bold mt-4">$1</h2>')
-                .replace(/^\* (.*$)/gim, '<li class="ml-4 mb-2">$1</li>')
+                .replace(/^## (.*$)/gim, '<h2 class="text-blue-800">$1</h2>')
+                .replace(/^\* (.*$)/gim, '<li class="ml-4">$1</li>')
                 .replace(/\n/g, '<br>');
 
             loader.classList.add('hidden');
-            updateProgress();
         }
 
-        function updateProgress() {
-            let p = parseInt(localStorage.getItem('user_progress') || 0);
-            p = Math.min(p + 5, 100);
-            localStorage.setItem('user_progress', p);
-            document.getElementById('progress-bar').style.width = p + '%';
-        }
-
-        function resetApp() { if(confirm("Clear API key and progress?")) { localStorage.clear(); location.reload(); } }
-        
-        // Initial Check
-        if(app.key) showScreen('subject-screen');
+        function resetApp() { localStorage.clear(); location.reload(); }
+        if(state.key) showScreen('subject-screen');
     </script>
 </body>
 </html>
