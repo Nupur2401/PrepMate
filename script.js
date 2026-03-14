@@ -20,6 +20,7 @@ function selectSubject(subject) {
 
 async function loadChapters(subject) {
   try {
+    document.getElementById("chapterInfo").textContent = "Fetching chapters…";
     const response = await fetch("http://localhost:3000/gemini", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -31,8 +32,9 @@ async function loadChapters(subject) {
     const data = await response.json();
     console.log("Gemini response:", data);
 
-    if (data.chapters) {
+    if (data.chapters && data.chapters.length > 0) {
       populateDropdown(data.chapters);
+      document.getElementById("chapterInfo").textContent = "";
     } else {
       document.getElementById("chapterInfo").textContent =
         "No chapters returned from Gemini.";
